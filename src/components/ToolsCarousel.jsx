@@ -1,18 +1,20 @@
 'use client'
 
-import { motion, useAnimationFrame } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { Zap } from 'lucide-react'
 
 export default function ToolsCarousel() {
 	const [tools, setTools] = useState([])
-	const [rotation, setRotation] = useState(0)
 	const [orbit, setOrbit] = useState({ radius: 400, cardClass: 'w-64 h-80' })
 
 	useEffect(() => {
 		const fetchTools = async () => {
-			const { data } = await supabase.from('tools').select('*').order('order_index')
+			const { data } = await supabase
+				.from('tools')
+				.select('*')
+				.order('order_index')
 			setTools(data || [])
 		}
 		fetchTools()
@@ -31,10 +33,6 @@ export default function ToolsCarousel() {
 		return () => window.removeEventListener('resize', updateOrbit)
 	}, [])
 
-	useAnimationFrame((t) => {
-		setRotation(t * 0.02) // Control speed
-	})
-
 	if (tools.length === 0) return null
 
 	return (
@@ -43,24 +41,23 @@ export default function ToolsCarousel() {
 			<div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[var(--color-brand)]/5 blur-[120px] rounded-full -z-10' />
 
 			<div className='max-w-7xl mx-auto px-4 sm:px-6 md:px-8 mb-16 sm:mb-24 text-center'>
-				<h2 className='text-4xl md:text-6xl font-black text-white mb-6 uppercase tracking-tighter' style={{ fontFamily: 'var(--font-space)' }}>
+				<h2
+					className='text-4xl md:text-6xl font-black text-white mb-6 uppercase tracking-tighter'
+					style={{ fontFamily: 'var(--font-space)' }}
+				>
 					Tools
 				</h2>
-				<p className='text-gray-500 font-light text-lg tracking-widest uppercase'>The engines behind the automation</p>
+				<p className='text-gray-500 font-light text-lg tracking-widest uppercase'>
+					The engines behind the automation
+				</p>
 			</div>
 
 			<div className='relative h-[min(90vw,420px)] sm:h-[460px] md:h-[500px] w-full max-w-full flex items-center justify-center perspective-[2000px] preserve-3d overflow-x-hidden'>
-				<div 
-					className={`relative preserve-3d ${orbit.cardClass}`}
-					style={{ 
-						transform: `rotateY(${rotation}deg)`,
-						transition: 'transform 0.1s linear'
-					}}
-				>
+				<div className={`relative preserve-3d tools-orbit-wheel ${orbit.cardClass}`}>
 					{tools.map((tool, i) => {
 						const angle = (i / tools.length) * 360
 						const radius = orbit.radius
-						
+
 						return (
 							<motion.div
 								key={tool.id}
@@ -74,16 +71,19 @@ export default function ToolsCarousel() {
 
 								<div className='w-20 h-20 sm:w-28 sm:h-28 relative z-10 p-3 sm:p-4 bg-white/5 rounded-2xl sm:rounded-3xl border border-white/5 group-hover:bg-white/10 transition-all'>
 									{tool.image_url ? (
-										<img 
-											src={tool.image_url} 
-											alt={tool.name} 
-											className='w-full h-full object-contain filter drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]' 
+										<img
+											src={tool.image_url}
+											alt={tool.name}
+											className='w-full h-full object-contain filter drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]'
 										/>
 									) : (
-										<Zap size={64} className='text-[var(--color-brand-light)] w-full h-full' />
+										<Zap
+											size={64}
+											className='text-[var(--color-brand-light)] w-full h-full'
+										/>
 									)}
 								</div>
-								
+
 								<div className='text-center relative z-10 px-1 min-w-0'>
 									<h3 className='text-xs sm:text-lg md:text-xl font-black text-white tracking-wider sm:tracking-widest uppercase mb-1 break-words max-w-[10rem] sm:max-w-none mx-auto'>
 										{tool.name}

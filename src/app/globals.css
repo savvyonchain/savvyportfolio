@@ -28,6 +28,22 @@
 	}
 }
 
+/* Tools 3D ring — CSS animation (avoids framer useAnimationFrame API issues on some versions). */
+@keyframes tools-orbit-rotate {
+	from {
+		transform: rotateY(0deg);
+	}
+	to {
+		transform: rotateY(360deg);
+	}
+}
+
+.tools-orbit-wheel {
+	animation: tools-orbit-rotate 90s linear infinite;
+	transform-style: preserve-3d;
+	will-change: transform;
+}
+
 .text-gradient {
 	background: linear-gradient(
 		135deg,

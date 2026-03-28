@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -25,7 +26,17 @@ export default function Projects() {
 	const [projects, setProjects] = useState([])
 	const [loading, setLoading] = useState(true)
 	const [error, setError] = useState(null)
-	const [carouselLayout, setCarouselLayout] = useState({ spread: 220, rotate: 25 })
+	const [carouselLayout, setCarouselLayout] = useState({
+		spread: 220,
+		rotate: 25,
+	})
+	const scrollYRef = useRef(0)
+	const [mobileShowAll, setMobileShowAll] = useState(false)
+	const [portalReady, setPortalReady] = useState(false)
+
+	useEffect(() => {
+		setPortalReady(true)
+	}, [])
 
 	useEffect(() => {
 		const updateLayout = () => {
@@ -45,15 +56,28 @@ export default function Projects() {
 		fetchProjects()
 	}, [])
 
-	// Lock body scroll when modal is open
+	// Lock page scroll when modal is open (incl. mobile / iOS)
 	useEffect(() => {
-		if (selectedProject) {
-			document.body.style.overflow = 'hidden'
-		} else {
-			document.body.style.overflow = 'unset'
-		}
+		if (!selectedProject) return
+		scrollYRef.current = window.scrollY
+		const html = document.documentElement
+		const body = document.body
+		body.style.position = 'fixed'
+		body.style.top = `-${scrollYRef.current}px`
+		body.style.left = '0'
+		body.style.right = '0'
+		body.style.width = '100%'
+		body.style.overflow = 'hidden'
+		html.style.overflow = 'hidden'
 		return () => {
-			document.body.style.overflow = 'unset'
+			body.style.position = ''
+			body.style.top = ''
+			body.style.left = ''
+			body.style.right = ''
+			body.style.width = ''
+			body.style.overflow = ''
+			html.style.overflow = ''
+			window.scrollTo(0, scrollYRef.current)
 		}
 	}, [selectedProject])
 
@@ -177,7 +201,7 @@ export default function Projects() {
 
 	return (
 		<>
-			<section className='max-w-7xl mx-auto px-4 sm:px-8 py-12 sm:py-20 min-h-[70vh] sm:min-h-[85vh] flex flex-col justify-center overflow-x-hidden'>
+			<section className='max-w-7xl mx-auto px-4 sm:px-8 py-12 sm:py-20 min-h-[70vh] sm:min-h-[85vh] flex flex-col justify-center overflow-x-visible md:overflow-x-hidden'>
 				<div className='relative z-10 w-full mb-16 text-center'>
 					<h1
 						className='mb-4 text-3xl font-extrabold tracking-wide text-white md:text-5xl'
@@ -190,12 +214,121 @@ export default function Projects() {
 					</p>
 				</div>
 
-				<div className='relative h-[min(72vw,420px)] sm:h-[460px] md:h-[500px] w-full max-w-full flex items-center justify-center -mt-4 sm:-mt-8 min-w-0'>
-					{/* Navigation Arrows */}
+				{/* Mobile: Swipe vs View all + projects */}
+				<div className='md:hidden w-full -mx-4 px-4 space-y-4'>
+					<div className='flex justify-center gap-2'>
+						<button
+							type='button'
+							onClick={() => setMobileShowAll(false)}
+							className={`px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all ${
+								!mobileShowAll
+									? 'bg-[var(--color-brand)] border-[var(--color-brand)] text-white shadow-[0_0_20px_rgba(108,59,137,0.4)]'
+									: 'bg-white/5 border-white/15 text-gray-400 hover:border-white/30 hover:text-white'
+							}`}
+						>
+							Swipe
+						</button>
+						<button
+							type='button'
+							onClick={() => setMobileShowAll(true)}
+							className={`px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all ${
+								mobileShowAll
+									? 'bg-[var(--color-brand)] border-[var(--color-brand)] text-white shadow-[0_0_20px_rgba(108,59,137,0.4)]'
+									: 'bg-white/5 border-white/15 text-gray-400 hover:border-white/30 hover:text-white'
+							}`}
+						>
+							View all
+						</button>
+					</div>
+
+					<div
+						className={
+							mobileShowAll
+								? 'grid grid-cols-2 gap-3'
+								: 'flex gap-4 overflow-x-auto snap-x snap-mandatory py-4 scroll-px-4 overscroll-x-contain touch-pan-x [-webkit-overflow-scrolling:touch] [scrollbar-width:thin] items-center min-h-0'
+						}
+					>
+						{projects.map((project, i) => (
+							<motion.div
+								key={project.id ?? i}
+								role='button'
+								tabIndex={0}
+								onClick={() => setSelectedProject(project)}
+								onKeyDown={(e) => {
+									if (e.key === 'Enter' || e.key === ' ') {
+										e.preventDefault()
+										setSelectedProject(project)
+									}
+								}}
+								className={
+									mobileShowAll
+										? 'w-full h-[200px] rounded-[1.25rem] flex flex-col justify-between overflow-hidden shadow-[0_12px_36px_rgba(0,0,0,0.55)] cursor-pointer relative border border-white/10'
+										: 'snap-center shrink-0 w-[min(84vw,268px)] h-[clamp(248px,min(54svh,316px),316px)] rounded-[1.5rem] flex flex-col justify-between overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.6)] cursor-pointer relative border border-white/10 box-border'
+								}
+								whileTap={{ scale: 0.98 }}
+							>
+								<div
+									className='absolute inset-0 opacity-100 -z-20 transform scale-[1.1]'
+									style={{
+										background: `linear-gradient(135deg, ${project.gradient_start || '#6c3b89'}, ${project.gradient_end || '#bf55ec'})`,
+									}}
+								/>
+								<div className='absolute inset-0 bg-black opacity-20 -z-10 mix-blend-overlay' />
+
+								<div className='relative flex flex-col items-center justify-center flex-1 overflow-hidden min-h-0'>
+									{getIcon(project.icon_name, mobileShowAll ? 52 : 100)}
+								</div>
+
+								<div
+									className={`w-full bg-white/10 backdrop-blur-2xl border-t border-white/20 flex justify-between items-center relative z-10 shadow-inner ${
+										mobileShowAll
+											? 'h-[72px] px-3 py-2'
+											: 'h-[105px] px-6 py-5'
+									}`}
+								>
+									<div className='flex flex-col justify-center min-w-0 flex-1 pr-2'>
+										<h3
+											className={`text-white font-bold tracking-tight leading-tight filter drop-shadow-md truncate ${
+												mobileShowAll ? 'text-xs mb-0.5' : 'text-[1.1rem] mb-1.5'
+											}`}
+										>
+											{project.title}
+										</h3>
+										<p
+											className={`text-gray-300 font-semibold tracking-wide flex items-center gap-1 uppercase ${
+												mobileShowAll ? 'text-[9px] line-clamp-1' : 'text-xs gap-1.5'
+											}`}
+										>
+											<span className='w-1.5 h-1.5 rounded-full bg-[var(--color-brand-light)] shrink-0'></span>
+											<span className='truncate'>{project.angle}</span>
+										</p>
+									</div>
+									<div className='flex flex-col items-end justify-center shrink-0'>
+										<p
+											className={`font-bold tracking-widest text-white uppercase ${
+												mobileShowAll ? 'text-[9px]' : 'text-xs'
+											}`}
+										>
+											{project.status || 'Live'}
+										</p>
+										{!mobileShowAll && (
+											<span className='text-[9px] text-white/50 tracking-widest mt-1'>
+												STATUS
+											</span>
+										)}
+									</div>
+								</div>
+							</motion.div>
+						))}
+					</div>
+				</div>
+
+				<div className='relative h-[min(72vw,420px)] sm:h-[460px] md:h-[500px] w-full max-w-full hidden md:flex items-center justify-center -mt-4 sm:-mt-8 min-w-0'>
+					{/* Navigation Arrows (desktop) */}
 					<button
 						onClick={handlePrev}
 						disabled={activeIndex === 0}
-						className='absolute left-4 md:left-[10%] z-40 p-4 rounded-full bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 transition-all text-white disabled:opacity-20 disabled:cursor-not-allowed hidden md:block'
+						className='absolute left-4 md:left-[10%] z-40 p-4 rounded-full bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 transition-all text-white disabled:opacity-20 disabled:cursor-not-allowed'
 					>
 						<ChevronLeft size={24} />
 					</button>
@@ -203,7 +336,7 @@ export default function Projects() {
 					<button
 						onClick={handleNext}
 						disabled={activeIndex === projects.length - 1}
-						className='absolute right-4 md:right-[10%] z-40 p-4 rounded-full bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 transition-all text-white disabled:opacity-20 disabled:cursor-not-allowed hidden md:block'
+						className='absolute right-4 md:right-[10%] z-40 p-4 rounded-full bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 transition-all text-white disabled:opacity-20 disabled:cursor-not-allowed'
 					>
 						<ChevronRight size={24} />
 					</button>
@@ -309,27 +442,6 @@ export default function Projects() {
 					</div>
 				</div>
 
-				<div className='flex md:hidden justify-center gap-4 mt-2'>
-					<button
-						type='button'
-						onClick={handlePrev}
-						disabled={activeIndex === 0}
-						className='z-40 p-3 rounded-full bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 transition-all text-white disabled:opacity-20 disabled:cursor-not-allowed'
-						aria-label='Previous project'
-					>
-						<ChevronLeft size={22} />
-					</button>
-					<button
-						type='button'
-						onClick={handleNext}
-						disabled={activeIndex === projects.length - 1}
-						className='z-40 p-3 rounded-full bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 transition-all text-white disabled:opacity-20 disabled:cursor-not-allowed'
-						aria-label='Next project'
-					>
-						<ChevronRight size={22} />
-					</button>
-				</div>
-
 				<div className='relative z-10 mt-8 text-center'>
 					<Link
 						href='/contact'
@@ -340,22 +452,24 @@ export default function Projects() {
 				</div>
 			</section>
 
-			{/* Project Details Modal */}
-			<AnimatePresence>
-				{selectedProject && (
-					<motion.div
-						initial={{ opacity: 0 }}
-						animate={{ opacity: 1 }}
-						exit={{ opacity: 0 }}
-						className='fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-8 bg-black/80 backdrop-blur-md overflow-y-auto'
-						onClick={() => setSelectedProject(null)}
-					>
+			{/* Project Details Modal — portal escapes main z-10 so overlay sits above nav (z-50) */}
+			{portalReady &&
+				createPortal(
+					<AnimatePresence>
+						{selectedProject && (
+							<motion.div
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								exit={{ opacity: 0 }}
+								className='fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-8 bg-black/80 backdrop-blur-md overflow-hidden overscroll-none'
+								onClick={() => setSelectedProject(null)}
+							>
 						<motion.div
 							initial={{ opacity: 0, scale: 0.95, y: 20 }}
 							animate={{ opacity: 1, scale: 1, y: 0 }}
 							exit={{ opacity: 0, scale: 0.95, y: 20 }}
 							onClick={(e) => e.stopPropagation()}
-							className='bg-[#050308] border border-white/10 w-[min(100vw-1rem,95vw)] max-h-[min(100dvh-2rem,90vh)] h-[90vh] rounded-2xl sm:rounded-[3rem] shadow-[0_0_150px_rgba(108,59,137,0.4)] overflow-hidden my-auto flex flex-col relative'
+							className='bg-[#050308] border border-white/10 w-[min(100vw-1rem,95vw)] max-h-[min(100dvh-2rem,90vh)] h-[min(90vh,100dvh-2rem)] rounded-2xl sm:rounded-[3rem] shadow-[0_0_150px_rgba(108,59,137,0.4)] overflow-hidden flex flex-col relative max-w-full min-h-0'
 						>
 							{/* Background Glow */}
 							<div
@@ -402,10 +516,10 @@ export default function Projects() {
 								</button>
 							</div>
 
-							{/* Content - Main Grid */}
-							<div className='flex-1 overflow-hidden flex flex-col md:grid md:grid-cols-12'>
-								{/* Left: Project Details (Scrollable) */}
-								<div className='md:col-span-5 h-full overflow-y-auto custom-scrollbar p-5 sm:p-8 md:p-14 border-r border-white/5 bg-gradient-to-b from-white/[0.02] to-transparent min-w-0'>
+							{/* Content — single scroll region */}
+							<div className='flex-1 min-h-0 overflow-y-auto overscroll-contain [touch-action:pan-y] [-webkit-overflow-scrolling:touch] custom-scrollbar flex flex-col md:grid md:grid-cols-12'>
+								{/* Left: Project Details */}
+								<div className='md:col-span-5 p-5 sm:p-8 md:p-14 md:border-r border-white/5 bg-gradient-to-b from-white/[0.02] to-transparent min-w-0'>
 									<div className='space-y-16'>
 										<section>
 											<label className='text-[10px] uppercase font-black tracking-widest text-[var(--color-brand-light)] mb-6 block opacity-60'>
@@ -475,8 +589,8 @@ export default function Projects() {
 									</div>
 								</div>
 
-								{/* Right: Media Showcase (Center Viewport Focused) */}
-								<div className='md:col-span-7 h-full overflow-y-auto custom-scrollbar p-4 sm:p-6 md:p-14 bg-black/20 flex flex-col gap-8 sm:gap-12 min-w-0'>
+								{/* Right: Media Showcase */}
+								<div className='md:col-span-7 p-4 sm:p-6 md:p-14 bg-black/20 flex flex-col gap-8 sm:gap-12 min-w-0'>
 									<div className='space-y-6'>
 										<label className='text-[10px] uppercase font-black tracking-widest text-gray-500'>
 											Visual Interface
@@ -524,14 +638,11 @@ export default function Projects() {
 													<video
 														src={selectedProject.video_url}
 														controls
+														playsInline
+														preload='auto'
 														className='w-full h-full object-contain'
-														poster={selectedProject.screenshot_url}
-													>
-														<source
-															src={selectedProject.video_url}
-															type='video/mp4'
-														/>
-													</video>
+														poster={selectedProject.screenshot_url || undefined}
+													/>
 												)
 											) : (
 												<div className='w-full h-full flex items-center justify-center text-gray-700 italic'>
@@ -545,9 +656,11 @@ export default function Projects() {
 								</div>
 							</div>
 						</motion.div>
-					</motion.div>
+							</motion.div>
+						)}
+					</AnimatePresence>,
+					document.body,
 				)}
-			</AnimatePresence>
 		</>
 	)
 }
