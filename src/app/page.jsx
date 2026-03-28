@@ -151,7 +151,7 @@ export default function Home() {
 			{/* 02. Professional Summary (Introduction) */}
 			<section className='max-w-7xl mx-auto px-8 py-24 md:py-32 relative'>
 				<div className='absolute top-0 left-1/2 -translate-x-1/2 w-[60vw] h-[60vw] bg-[var(--color-brand)]/5 blur-[120px] -z-10 rounded-full animate-pulse' />
-				
+
 				<motion.div
 					initial={{ opacity: 0, y: 30 }}
 					whileInView={{ opacity: 1, y: 0 }}
@@ -179,18 +179,18 @@ export default function Home() {
 								<span className='text-white font-bold'>
 									4+ years of experience
 								</span>{' '}
-								building intelligent workflows and automation systems that
-								drive operational efficiency.
+								building intelligent workflows and automation systems that drive
+								operational efficiency.
 							</p>
 							<p className='text-gray-400 text-base md:text-lg font-light leading-relaxed text-left'>
-								Expertise in designing and deploying AI-powered solutions
-								using no/low code tools to automate complex business
-								processes. Proven track record of reducing manual workload by{' '}
+								Expertise in designing and deploying AI-powered solutions using
+								no/low code tools to automate complex business processes. Proven
+								track record of reducing manual workload by{' '}
 								<span className='text-[var(--color-brand-light)] font-bold'>
 									15-20 hours weekly
 								</span>{' '}
-								while eliminating operational costs through smart automation
-								and self-hosted solutions.
+								while eliminating operational costs through smart automation and
+								self-hosted solutions.
 							</p>
 						</div>
 

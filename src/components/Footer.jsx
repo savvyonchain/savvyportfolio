@@ -29,7 +29,7 @@ export default function Footer() {
 		{
 			name: 'Email',
 			icon: <Mail size={18} />,
-			href: 'mailto:savvyonchain@gmail.com',
+			href: 'https://mail.google.com/mail/?view=cm&fs=1&to=savvyonchain@gmail.com',
 			color: 'hover:text-[var(--color-brand-light)]',
 		},
 	]
@@ -57,18 +57,22 @@ export default function Footer() {
 							Quick Connect
 						</h4>
 						<div className='flex flex-wrap gap-4'>
-							{contactPoints.map((point) => (
-								<a
-									key={point.name}
-									href={point.href}
-									target='_blank'
-									rel='noopener noreferrer'
-									className={`p-3 rounded-xl bg-white/5 border border-white/10 text-gray-400 transition-all ${point.color} hover:border-white/20 hover:scale-110`}
-									title={point.name}
-								>
-									{point.icon}
-								</a>
-							))}
+							{contactPoints.map((point) => {
+								const isMailto = point.href.startsWith('mailto:')
+								return (
+									<a
+										key={point.name}
+										href={point.href}
+										{...(isMailto
+											? {}
+											: { target: '_blank', rel: 'noopener noreferrer' })}
+										className={`p-3 rounded-xl bg-white/5 border border-white/10 text-gray-400 transition-all ${point.color} hover:border-white/20 hover:scale-110`}
+										title={point.name}
+									>
+										{point.icon}
+									</a>
+								)
+							})}
 						</div>
 					</div>
 
