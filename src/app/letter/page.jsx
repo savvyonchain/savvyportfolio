@@ -60,7 +60,7 @@ export default function LetterPage() {
 				<div className="absolute bottom-[-20%] right-[-10%] w-[60vw] h-[60vw] bg-[var(--color-secondary)] rounded-full mix-blend-screen blur-[150px] opacity-[0.15] animate-pulse" style={{ animationDelay: '2s' }} />
 			</div>
 
-			<div className='relative z-10 max-w-4xl px-8 mx-auto'>
+			<div className='relative z-10 max-w-4xl px-4 sm:px-6 md:px-8 mx-auto'>
 				{/* Top Navigation */}
 				<motion.div
 					initial={{ opacity: 0, x: -10 }}
@@ -80,7 +80,7 @@ export default function LetterPage() {
 					initial={{ opacity: 0, y: 30 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.8, ease: 'easeOut' }}
-					className='relative p-12 md:p-20 bg-white/[0.02] backdrop-blur-3xl rounded-[3.5rem] border border-white/10 shadow-[0_40px_100px_rgba(0,0,0,0.5)] flex flex-col'
+					className='relative p-6 sm:p-10 md:p-20 bg-white/[0.02] backdrop-blur-3xl rounded-[2rem] sm:rounded-[3.5rem] border border-white/10 shadow-[0_40px_100px_rgba(0,0,0,0.5)] flex flex-col min-w-0 overflow-hidden'
 				>
 					{/* Decorative Workflow Icon in bg */}
 					<div className='absolute top-10 right-10 opacity-5 pointer-events-none'>
@@ -90,7 +90,7 @@ export default function LetterPage() {
 					{/* Title Section */}
 					<header className='mb-16'>
 						<h1
-							className='text-5xl md:text-7xl font-black italic tracking-tighter text-[var(--color-brand-light)] leading-none filter drop-shadow-[0_0_15px_rgba(159,102,194,0.3)]'
+							className='text-3xl sm:text-5xl md:text-7xl font-black italic tracking-tighter text-[var(--color-brand-light)] leading-tight sm:leading-none filter drop-shadow-[0_0_15px_rgba(159,102,194,0.3)] break-words'
 							style={{ fontFamily: 'var(--font-space)' }}
 						>
 							{displayLetter.title}
@@ -124,7 +124,7 @@ export default function LetterPage() {
 								initial={{ opacity: 0 }}
 								animate={{ opacity: 1 }}
 								transition={{ delay: 1 }}
-								className='text-6xl md:text-7xl font-black italic tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-brand-light)] to-[var(--color-secondary)]'
+								className='text-4xl sm:text-6xl md:text-7xl font-black italic tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-brand-light)] to-[var(--color-secondary)] break-words'
 								style={{ fontFamily: 'var(--font-space)' }}
 							>
 								{displayLetter.signature_name}

@@ -19,7 +19,7 @@ export default function SkillsGrid() {
 
 	return (
 		<section className='w-full pt-10 pb-20 bg-black/40'>
-			<div className='max-w-7xl mx-auto px-8'>
+			<div className='max-w-7xl mx-auto px-4 sm:px-6 md:px-8'>
 				<div className='text-center mb-16'>
 					<h2 className='text-4xl md:text-5xl font-extrabold text-white mb-4' style={{ fontFamily: 'var(--font-space)' }}>
 						My <span className='text-[var(--color-secondary)]'>Skills</span>
@@ -38,7 +38,7 @@ export default function SkillsGrid() {
 							viewport={{ once: true }}
 							transition={{ delay: i * 0.1 }}
 							whileHover={{ scale: 1.02 }}
-							className='p-8 rounded-[2rem] bg-[#111111]/80 backdrop-blur-xl border border-white/5 relative overflow-hidden group shadow-[0_10px_30px_rgba(0,0,0,0.5)]'
+							className='p-5 sm:p-8 rounded-[1.5rem] sm:rounded-[2rem] bg-[#111111]/80 backdrop-blur-xl border border-white/5 relative overflow-hidden group shadow-[0_10px_30px_rgba(0,0,0,0.5)] min-w-0'
 						>
 							{/* Accent bar on left as seen in myskills.png */}
 							<div 
@@ -46,11 +46,11 @@ export default function SkillsGrid() {
 								style={{ backgroundColor: skill.accent_color || '#9f66c2' }}
 							/>
 
-							<div className='flex items-start justify-between mb-8'>
-								<h3 className='text-3xl font-extrabold text-white tracking-tight leading-none'>
+							<div className='flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-8'>
+								<h3 className='text-xl sm:text-3xl font-extrabold text-white tracking-tight leading-tight break-words pr-0 sm:pr-2'>
 									{skill.name}
 								</h3>
-								<span className='text-xs font-bold text-gray-500 uppercase tracking-widest'>
+								<span className='text-xs font-bold text-gray-500 uppercase tracking-widest shrink-0'>
 									{skill.hex_code}
 								</span>
 							</div>

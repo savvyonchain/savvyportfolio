@@ -1,8 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { motion } from 'framer-motion'
-import { Mail, Send, MessageCircle, X, Calendar, ChevronRight } from 'lucide-react'
+import { Mail, Send, MessageCircle, X } from 'lucide-react'
 
 export default function Footer() {
 	const currentYear = new Date().getFullYear()
@@ -39,8 +38,8 @@ export default function Footer() {
 			{/* Ambient background glow */}
 			<div className='absolute bottom-0 left-1/2 -translate-x-1/2 w-[60vw] h-[20vw] bg-[var(--color-brand)]/5 blur-[100px] rounded-full pointer-events-none' />
 
-			<div className='max-w-7xl mx-auto px-8'>
-				<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16'>
+			<div className='max-w-7xl mx-auto px-4 sm:px-6 md:px-8'>
+				<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 sm:gap-12 mb-12 sm:mb-16'>
 					{/* Brand Column */}
 					<div className='flex flex-col gap-6'>
 						<Link href='/' className='text-2xl font-black text-white' style={{ fontFamily: 'var(--font-space)' }}>
@@ -93,7 +92,7 @@ export default function Footer() {
 						<h4 className='text-[10px] font-black uppercase tracking-[0.3em] text-[var(--color-brand-light)]'>
 							Current Status
 						</h4>
-						<div className='p-5 rounded-2xl bg-emerald-500/5 border border-emerald-500/10 flex items-center justify-between'>
+						<div className='p-5 rounded-2xl bg-emerald-500/5 border border-emerald-500/10 flex flex-wrap items-center justify-between gap-3'>
 							<div className='flex items-center gap-3'>
 								<div className='relative flex w-2 h-2'>
 									<span className='absolute inline-flex w-full h-full rounded-full opacity-75 animate-ping bg-emerald-400'></span>

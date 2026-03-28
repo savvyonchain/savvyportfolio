@@ -8,6 +8,7 @@ import { Zap } from 'lucide-react'
 export default function ToolsCarousel() {
 	const [tools, setTools] = useState([])
 	const [rotation, setRotation] = useState(0)
+	const [orbit, setOrbit] = useState({ radius: 400, cardClass: 'w-64 h-80' })
 
 	useEffect(() => {
 		const fetchTools = async () => {
@@ -15,6 +16,19 @@ export default function ToolsCarousel() {
 			setTools(data || [])
 		}
 		fetchTools()
+	}, [])
+
+	useEffect(() => {
+		const updateOrbit = () => {
+			const w = typeof window !== 'undefined' ? window.innerWidth : 1024
+			if (w < 480) setOrbit({ radius: 150, cardClass: 'w-44 h-56' })
+			else if (w < 640) setOrbit({ radius: 220, cardClass: 'w-52 h-64' })
+			else if (w < 768) setOrbit({ radius: 300, cardClass: 'w-56 h-72' })
+			else setOrbit({ radius: 400, cardClass: 'w-64 h-80' })
+		}
+		updateOrbit()
+		window.addEventListener('resize', updateOrbit)
+		return () => window.removeEventListener('resize', updateOrbit)
 	}, [])
 
 	useAnimationFrame((t) => {
@@ -28,16 +42,16 @@ export default function ToolsCarousel() {
 			{/* Background ambient light */}
 			<div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[var(--color-brand)]/5 blur-[120px] rounded-full -z-10' />
 
-			<div className='max-w-7xl mx-auto px-8 mb-24 text-center'>
+			<div className='max-w-7xl mx-auto px-4 sm:px-6 md:px-8 mb-16 sm:mb-24 text-center'>
 				<h2 className='text-4xl md:text-6xl font-black text-white mb-6 uppercase tracking-tighter' style={{ fontFamily: 'var(--font-space)' }}>
 					Tools
 				</h2>
 				<p className='text-gray-500 font-light text-lg tracking-widest uppercase'>The engines behind the automation</p>
 			</div>
 
-			<div className='relative h-[500px] w-full flex items-center justify-center perspective-[2000px] preserve-3d'>
+			<div className='relative h-[min(90vw,420px)] sm:h-[460px] md:h-[500px] w-full max-w-full flex items-center justify-center perspective-[2000px] preserve-3d overflow-x-hidden'>
 				<div 
-					className='relative w-64 h-80 preserve-3d'
+					className={`relative preserve-3d ${orbit.cardClass}`}
 					style={{ 
 						transform: `rotateY(${rotation}deg)`,
 						transition: 'transform 0.1s linear'
@@ -45,12 +59,12 @@ export default function ToolsCarousel() {
 				>
 					{tools.map((tool, i) => {
 						const angle = (i / tools.length) * 360
-						const radius = 400 // Distance from center
+						const radius = orbit.radius
 						
 						return (
 							<motion.div
 								key={tool.id}
-								className='absolute inset-0 w-64 h-80 rounded-[2.5rem] bg-[#111111]/90 backdrop-blur-2xl border border-white/10 p-8 flex flex-col items-center justify-center gap-6 shadow-[0_0_50px_rgba(0,0,0,0.5)] backface-hidden group hover:border-[var(--color-brand)]/50 transition-colors'
+								className='absolute inset-0 rounded-[1.75rem] sm:rounded-[2.5rem] bg-[#111111]/90 backdrop-blur-2xl border border-white/10 p-4 sm:p-8 flex flex-col items-center justify-center gap-4 sm:gap-6 shadow-[0_0_50px_rgba(0,0,0,0.5)] backface-hidden group hover:border-[var(--color-brand)]/50 transition-colors'
 								style={{
 									transform: `rotateY(${angle}deg) translateZ(${radius}px)`,
 								}}
@@ -58,7 +72,7 @@ export default function ToolsCarousel() {
 								{/* Reflection effect at bottom */}
 								<div className='absolute -bottom-40 left-0 right-0 h-40 bg-gradient-to-t from-transparent via-white/5 to-transparent opacity-20 pointer-events-none transform -scale-y-100 blur-sm' />
 
-								<div className='w-28 h-28 relative z-10 p-4 bg-white/5 rounded-3xl border border-white/5 group-hover:bg-white/10 transition-all'>
+								<div className='w-20 h-20 sm:w-28 sm:h-28 relative z-10 p-3 sm:p-4 bg-white/5 rounded-2xl sm:rounded-3xl border border-white/5 group-hover:bg-white/10 transition-all'>
 									{tool.image_url ? (
 										<img 
 											src={tool.image_url} 
@@ -70,8 +84,8 @@ export default function ToolsCarousel() {
 									)}
 								</div>
 								
-								<div className='text-center relative z-10'>
-									<h3 className='text-xl font-black text-white tracking-widest uppercase mb-1'>
+								<div className='text-center relative z-10 px-1 min-w-0'>
+									<h3 className='text-xs sm:text-lg md:text-xl font-black text-white tracking-wider sm:tracking-widest uppercase mb-1 break-words max-w-[10rem] sm:max-w-none mx-auto'>
 										{tool.name}
 									</h3>
 									<div className='w-10 h-1 bg-[var(--color-brand)] mx-auto rounded-full opacity-0 group-hover:opacity-100 transition-all' />

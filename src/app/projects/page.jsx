@@ -25,6 +25,21 @@ export default function Projects() {
 	const [projects, setProjects] = useState([])
 	const [loading, setLoading] = useState(true)
 	const [error, setError] = useState(null)
+	const [carouselLayout, setCarouselLayout] = useState({ spread: 220, rotate: 25 })
+
+	useEffect(() => {
+		const updateLayout = () => {
+			const w = typeof window !== 'undefined' ? window.innerWidth : 1024
+			if (w < 480) setCarouselLayout({ spread: 68, rotate: 14 })
+			else if (w < 640) setCarouselLayout({ spread: 95, rotate: 17 })
+			else if (w < 768) setCarouselLayout({ spread: 130, rotate: 20 })
+			else if (w < 1024) setCarouselLayout({ spread: 180, rotate: 22 })
+			else setCarouselLayout({ spread: 220, rotate: 25 })
+		}
+		updateLayout()
+		window.addEventListener('resize', updateLayout)
+		return () => window.removeEventListener('resize', updateLayout)
+	}, [])
 
 	useEffect(() => {
 		fetchProjects()
@@ -99,9 +114,9 @@ export default function Projects() {
 		)
 	}
 
-	const getIcon = (iconName) => {
+	const getIcon = (iconName, iconSize = 100) => {
 		const props = {
-			size: 100,
+			size: iconSize,
 			className: 'text-white opacity-90 drop-shadow-2xl',
 			strokeWidth: 1.5,
 		}
@@ -162,7 +177,7 @@ export default function Projects() {
 
 	return (
 		<>
-			<section className='max-w-7xl mx-auto px-4 sm:px-8 py-20 min-h-[85vh] flex flex-col justify-center overflow-hidden'>
+			<section className='max-w-7xl mx-auto px-4 sm:px-8 py-12 sm:py-20 min-h-[70vh] sm:min-h-[85vh] flex flex-col justify-center overflow-x-hidden'>
 				<div className='relative z-10 w-full mb-16 text-center'>
 					<h1
 						className='mb-4 text-3xl font-extrabold tracking-wide text-white md:text-5xl'
@@ -175,7 +190,7 @@ export default function Projects() {
 					</p>
 				</div>
 
-				<div className='relative h-[500px] w-full flex items-center justify-center -mt-8'>
+				<div className='relative h-[min(72vw,420px)] sm:h-[460px] md:h-[500px] w-full max-w-full flex items-center justify-center -mt-4 sm:-mt-8 min-w-0'>
 					{/* Navigation Arrows */}
 					<button
 						onClick={handlePrev}
@@ -194,18 +209,18 @@ export default function Projects() {
 					</button>
 
 					<div
-						className='relative w-full max-w-[280px] md:max-w-[340px] h-[450px] flex justify-center items-center'
+						className='relative w-full max-w-[min(88vw,280px)] sm:max-w-[300px] md:max-w-[340px] h-[min(68vw,400px)] sm:h-[420px] md:h-[450px] flex justify-center items-center mx-auto'
 						style={{ perspective: 1200 }}
 					>
 						{projects.map((project, index) => {
 							const offset = index - activeIndex
 							const absoluteOffset = Math.abs(offset)
 
-							const x = offset * 220
+							const x = offset * carouselLayout.spread
 							const scale = 1 - absoluteOffset * 0.15
 							const zIndex = projects.length - absoluteOffset
 							const opacity = absoluteOffset > 2 ? 0 : 1 - absoluteOffset * 0.4
-							const rotateY = offset * -25
+							const rotateY = offset * -carouselLayout.rotate
 							const isActive = activeIndex === index
 
 							return (
@@ -223,7 +238,7 @@ export default function Projects() {
 										rotateY,
 									}}
 									transition={{ duration: 0.6, ease: [0.32, 0.72, 0, 1] }}
-									className={`absolute w-full h-[430px] rounded-[2rem] flex flex-col justify-between overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.6)] ${isActive ? 'cursor-pointer hover:shadow-[0_20px_60px_rgba(108,59,137,0.4)]' : 'cursor-pointer'}`}
+									className={`absolute w-full h-[min(62vw,380px)] sm:h-[400px] md:h-[430px] rounded-[1.5rem] sm:rounded-[2rem] flex flex-col justify-between overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.6)] ${isActive ? 'cursor-pointer hover:shadow-[0_20px_60px_rgba(108,59,137,0.4)]' : 'cursor-pointer'}`}
 									style={{
 										transformStyle: 'preserve-3d',
 									}}
@@ -294,6 +309,27 @@ export default function Projects() {
 					</div>
 				</div>
 
+				<div className='flex md:hidden justify-center gap-4 mt-2'>
+					<button
+						type='button'
+						onClick={handlePrev}
+						disabled={activeIndex === 0}
+						className='z-40 p-3 rounded-full bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 transition-all text-white disabled:opacity-20 disabled:cursor-not-allowed'
+						aria-label='Previous project'
+					>
+						<ChevronLeft size={22} />
+					</button>
+					<button
+						type='button'
+						onClick={handleNext}
+						disabled={activeIndex === projects.length - 1}
+						className='z-40 p-3 rounded-full bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 transition-all text-white disabled:opacity-20 disabled:cursor-not-allowed'
+						aria-label='Next project'
+					>
+						<ChevronRight size={22} />
+					</button>
+				</div>
+
 				<div className='relative z-10 mt-8 text-center'>
 					<Link
 						href='/contact'
@@ -319,7 +355,7 @@ export default function Projects() {
 							animate={{ opacity: 1, scale: 1, y: 0 }}
 							exit={{ opacity: 0, scale: 0.95, y: 20 }}
 							onClick={(e) => e.stopPropagation()}
-							className='bg-[#050308] border border-white/10 w-[95vw] h-[90vh] rounded-[3rem] shadow-[0_0_150px_rgba(108,59,137,0.4)] overflow-hidden my-auto flex flex-col relative'
+							className='bg-[#050308] border border-white/10 w-[min(100vw-1rem,95vw)] max-h-[min(100dvh-2rem,90vh)] h-[90vh] rounded-2xl sm:rounded-[3rem] shadow-[0_0_150px_rgba(108,59,137,0.4)] overflow-hidden my-auto flex flex-col relative'
 						>
 							{/* Background Glow */}
 							<div
@@ -336,21 +372,21 @@ export default function Projects() {
 							/>
 
 							{/* Header - Glass Frost */}
-							<div className='z-30 p-8 md:px-14 flex justify-between items-center bg-black/40 backdrop-blur-2xl border-b border-white/5'>
-								<div className='flex items-center gap-6'>
+							<div className='z-30 p-4 sm:p-8 md:px-14 flex flex-col sm:flex-row gap-4 sm:gap-0 justify-between items-stretch sm:items-center bg-black/40 backdrop-blur-2xl border-b border-white/5 shrink-0'>
+								<div className='flex items-center gap-3 sm:gap-6 min-w-0'>
 									<div
-										className='w-14 h-14 rounded-2xl flex items-center justify-center border border-white/10 shadow-2xl'
+										className='w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl flex items-center justify-center border border-white/10 shadow-2xl shrink-0 overflow-hidden'
 										style={{
 											background: `linear-gradient(135deg, ${selectedProject.gradient_start}, ${selectedProject.gradient_end})`,
 										}}
 									>
-										{getIcon(selectedProject.icon_name)}
+										{getIcon(selectedProject.icon_name, 44)}
 									</div>
-									<div>
-										<h2 className='text-2xl md:text-3xl font-black text-white tracking-tight leading-none'>
+									<div className='min-w-0'>
+										<h2 className='text-lg sm:text-2xl md:text-3xl font-black text-white tracking-tight leading-tight break-words'>
 											{selectedProject.title}
 										</h2>
-										<p className='text-[10px] uppercase tracking-[0.3em] font-bold text-[var(--color-brand-light)] mt-2 opacity-80'>
+										<p className='text-[9px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold text-[var(--color-brand-light)] mt-2 opacity-80'>
 											{selectedProject.angle} • {selectedProject.category}
 										</p>
 									</div>
@@ -369,7 +405,7 @@ export default function Projects() {
 							{/* Content - Main Grid */}
 							<div className='flex-1 overflow-hidden flex flex-col md:grid md:grid-cols-12'>
 								{/* Left: Project Details (Scrollable) */}
-								<div className='md:col-span-5 h-full overflow-y-auto custom-scrollbar p-10 md:p-14 border-r border-white/5 bg-gradient-to-b from-white/[0.02] to-transparent'>
+								<div className='md:col-span-5 h-full overflow-y-auto custom-scrollbar p-5 sm:p-8 md:p-14 border-r border-white/5 bg-gradient-to-b from-white/[0.02] to-transparent min-w-0'>
 									<div className='space-y-16'>
 										<section>
 											<label className='text-[10px] uppercase font-black tracking-widest text-[var(--color-brand-light)] mb-6 block opacity-60'>
@@ -440,7 +476,7 @@ export default function Projects() {
 								</div>
 
 								{/* Right: Media Showcase (Center Viewport Focused) */}
-								<div className='md:col-span-7 h-full overflow-y-auto custom-scrollbar p-6 md:p-14 bg-black/20 flex flex-col gap-12'>
+								<div className='md:col-span-7 h-full overflow-y-auto custom-scrollbar p-4 sm:p-6 md:p-14 bg-black/20 flex flex-col gap-8 sm:gap-12 min-w-0'>
 									<div className='space-y-6'>
 										<label className='text-[10px] uppercase font-black tracking-widest text-gray-500'>
 											Visual Interface

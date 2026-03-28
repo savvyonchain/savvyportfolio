@@ -14,9 +14,9 @@ import TestimonialsSection from '@/components/TestimonialsSection'
 
 export default function About() {
 	return (
-		<div className='w-full relative pb-32 overflow-hidden'>
+		<div className='w-full relative pb-20 sm:pb-32 overflow-x-hidden'>
 			{/* ✦ Professional Intro Grid */}
-			<section className='max-w-7xl mx-auto px-8 pt-4 lg:pt-8 pb-10 relative'>
+			<section className='max-w-7xl mx-auto px-4 sm:px-6 md:px-8 pt-4 lg:pt-8 pb-10 relative'>
 				{/* Background Glows for Depth */}
 				<div className='absolute top-0 left-1/4 w-[30vw] h-[30vw] bg-[var(--color-brand)]/10 blur-[150px] -z-10 rounded-full' />
 				<div className='absolute bottom-0 right-1/4 w-[20vw] h-[20vw] bg-[var(--color-secondary)]/10 blur-[120px] -z-10 rounded-full' />
@@ -66,7 +66,7 @@ export default function About() {
 						viewport={{ once: true }}
 						className='lg:pt-12'
 					>
-						<div className='relative w-full bg-white/[0.03] backdrop-blur-3xl rounded-[3rem] border border-white/10 p-10 md:p-16 shadow-[0_20px_60px_rgba(0,0,0,0.4)] overflow-hidden group'>
+						<div className='relative w-full bg-white/[0.03] backdrop-blur-3xl rounded-[2rem] sm:rounded-[3rem] border border-white/10 p-6 sm:p-10 md:p-16 shadow-[0_20px_60px_rgba(0,0,0,0.4)] overflow-hidden group min-w-0'>
 							<div className='absolute top-0 right-0 p-12 opacity-5'>
 								<Zap size={140} className='text-white' />
 							</div>
@@ -135,12 +135,12 @@ export default function About() {
 			<TestimonialsSection />
 
 			{/* → Contact CTA */}
-			<section className='max-w-4xl mx-auto px-8 py-20 text-center'>
+			<section className='max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-20 text-center'>
 				<motion.div
 					initial={{ opacity: 0, scale: 0.95 }}
 					whileInView={{ opacity: 1, scale: 1 }}
 					viewport={{ once: true }}
-					className='bg-gradient-to-br from-white/10 to-transparent p-12 md:p-20 rounded-[3rem] border border-white/20 shadow-[0_20px_60px_rgba(0,0,0,0.5)] backdrop-blur-2xl relative overflow-hidden'
+					className='bg-gradient-to-br from-white/10 to-transparent p-8 sm:p-12 md:p-20 rounded-[2rem] sm:rounded-[3rem] border border-white/20 shadow-[0_20px_60px_rgba(0,0,0,0.5)] backdrop-blur-2xl relative overflow-hidden min-w-0'
 				>
 					{/* Inner glow */}
 					<div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[#9f66c2]/20 blur-[100px] -z-10' />

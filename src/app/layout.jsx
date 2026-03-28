@@ -27,7 +27,7 @@ export default function RootLayout({ children }) {
 
         <Navbar />
 
-        <main className="relative z-10">{children}</main>
+        <main className="relative z-10 w-full min-w-0 overflow-x-hidden">{children}</main>
 
         <Footer />
       </body>

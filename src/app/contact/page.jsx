@@ -73,7 +73,7 @@ export default function Contact() {
 	}
 
 	return (
-		<section className='max-w-6xl mx-auto px-8 py-20 min-h-[70vh]'>
+		<section className='max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-20 min-h-[70vh]'>
 			<Toaster position='bottom-right' />
 			<motion.div
 				initial={{ opacity: 0, y: 20 }}
@@ -82,7 +82,7 @@ export default function Contact() {
 			>
 				<div className='mb-16 text-center'>
 					<h1
-						className='mb-6 text-4xl font-extrabold text-white md:text-5xl lg:text-7xl'
+						className='mb-6 text-3xl sm:text-4xl font-extrabold text-white md:text-5xl lg:text-7xl px-1 break-words'
 						style={{ fontFamily: 'var(--font-space)' }}
 					>
 						Let&apos;s{' '}
@@ -98,7 +98,7 @@ export default function Contact() {
 
 				<div className='grid gap-12 md:grid-cols-2 lg:gap-20'>
 					{/* Contact Form */}
-					<div className='p-10 rounded-[2.5rem] bg-white/5 backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)] relative overflow-hidden'>
+					<div className='p-5 sm:p-8 md:p-10 rounded-[1.75rem] sm:rounded-[2.5rem] bg-white/5 backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)] relative overflow-hidden min-w-0'>
 						<div className='absolute top-0 right-0 w-32 h-32 bg-[var(--color-brand)]/10 blur-[50px] rounded-full pointer-events-none' />
 
 						<h2 className='flex items-center gap-3 mb-8 text-2xl font-bold text-white'>
@@ -176,7 +176,7 @@ export default function Contact() {
 
 					{/* Booking & Socials Side */}
 					<div className='flex flex-col gap-8'>
-						<div className='p-10 rounded-[2.5rem] bg-white/5 backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)] flex flex-col justify-center text-center relative overflow-hidden flex-1'>
+						<div className='p-5 sm:p-8 md:p-10 rounded-[1.75rem] sm:rounded-[2.5rem] bg-white/5 backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)] flex flex-col justify-center text-center relative overflow-hidden flex-1 min-w-0'>
 							<div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-brand opacity-20 blur-[80px] rounded-full pointer-events-none'></div>
 
 							<Calendar
@@ -250,7 +250,7 @@ export default function Contact() {
 							</div>
 
 							{/* Email Box */}
-							<div className='p-6 rounded-3xl bg-secondary/10 border border-secondary/20 flex items-center justify-between group hover:border-[var(--color-brand)]/50 transition-all'>
+							<div className='p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-secondary/10 border border-secondary/20 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-0 group hover:border-[var(--color-brand)]/50 transition-all min-w-0'>
 								<div className='flex items-center gap-4'>
 									<div className='w-12 h-12 rounded-2xl bg-[var(--color-brand)]/10 border border-[var(--color-brand)]/20 flex items-center justify-center text-[var(--color-brand-light)]'>
 										<Mail size={22} />
@@ -296,7 +296,7 @@ export default function Contact() {
 							</div>
 						</div>
 
-						<div className='flex items-center gap-6 p-8 border rounded-3xl bg-secondary/10 border-secondary/20'>
+						<div className='flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 p-5 sm:p-8 border rounded-2xl sm:rounded-3xl bg-secondary/10 border-secondary/20'>
 							<div className='flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400'>
 								<span className='relative flex w-3 h-3'>
 									<span className='absolute inline-flex w-full h-full rounded-full opacity-75 animate-ping bg-emerald-400'></span>
