@@ -39,7 +39,7 @@
 }
 
 .tools-orbit-wheel {
-	animation: tools-orbit-rotate 90s linear infinite;
+	animation: tools-orbit-rotate 14s linear infinite;
 	transform-style: preserve-3d;
 	will-change: transform;
 }

@@ -349,124 +349,125 @@ export default function Projects() {
 				)}
 
 				{!portfolioShowAll && (
-				<div className='relative h-[min(72vw,420px)] sm:h-[460px] md:h-[500px] w-full max-w-full hidden md:flex items-center justify-center -mt-4 sm:-mt-8 min-w-0'>
-					{/* Navigation Arrows (desktop) */}
-					<button
-						onClick={handlePrev}
-						disabled={activeIndex === 0}
-						className='absolute left-4 md:left-[10%] z-40 p-4 rounded-full bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 transition-all text-white disabled:opacity-20 disabled:cursor-not-allowed'
-					>
-						<ChevronLeft size={24} />
-					</button>
+					<div className='relative h-[min(72vw,420px)] sm:h-[460px] md:h-[500px] w-full max-w-full hidden md:flex items-center justify-center -mt-4 sm:-mt-8 min-w-0'>
+						{/* Navigation Arrows (desktop) */}
+						<button
+							onClick={handlePrev}
+							disabled={activeIndex === 0}
+							className='absolute left-4 md:left-[10%] z-40 p-4 rounded-full bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 transition-all text-white disabled:opacity-20 disabled:cursor-not-allowed'
+						>
+							<ChevronLeft size={24} />
+						</button>
 
-					<button
-						onClick={handleNext}
-						disabled={activeIndex === projects.length - 1}
-						className='absolute right-4 md:right-[10%] z-40 p-4 rounded-full bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 transition-all text-white disabled:opacity-20 disabled:cursor-not-allowed'
-					>
-						<ChevronRight size={24} />
-					</button>
+						<button
+							onClick={handleNext}
+							disabled={activeIndex === projects.length - 1}
+							className='absolute right-4 md:right-[10%] z-40 p-4 rounded-full bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 transition-all text-white disabled:opacity-20 disabled:cursor-not-allowed'
+						>
+							<ChevronRight size={24} />
+						</button>
 
-					<div
-						className='relative w-full max-w-[min(88vw,280px)] sm:max-w-[300px] md:max-w-[340px] h-[min(68vw,400px)] sm:h-[420px] md:h-[450px] flex justify-center items-center mx-auto'
-						style={{ perspective: 1200 }}
-					>
-						{projects.map((project, index) => {
-							const offset = index - activeIndex
-							const absoluteOffset = Math.abs(offset)
+						<div
+							className='relative w-full max-w-[min(88vw,280px)] sm:max-w-[300px] md:max-w-[340px] h-[min(68vw,400px)] sm:h-[420px] md:h-[450px] flex justify-center items-center mx-auto'
+							style={{ perspective: 1200 }}
+						>
+							{projects.map((project, index) => {
+								const offset = index - activeIndex
+								const absoluteOffset = Math.abs(offset)
 
-							const x = offset * carouselLayout.spread
-							const scale = 1 - absoluteOffset * 0.15
-							const zIndex = projects.length - absoluteOffset
-							const opacity = absoluteOffset > 2 ? 0 : 1 - absoluteOffset * 0.4
-							const rotateY = offset * -carouselLayout.rotate
-							const isActive = activeIndex === index
+								const x = offset * carouselLayout.spread
+								const scale = 1 - absoluteOffset * 0.15
+								const zIndex = projects.length - absoluteOffset
+								const opacity =
+									absoluteOffset > 2 ? 0 : 1 - absoluteOffset * 0.4
+								const rotateY = offset * -carouselLayout.rotate
+								const isActive = activeIndex === index
 
-							return (
-								<motion.div
-									key={project.id || index}
-									onClick={() => {
-										if (isActive) setSelectedProject(project)
-										else setActiveIndex(index)
-									}}
-									animate={{
-										x,
-										scale,
-										zIndex,
-										opacity,
-										rotateY,
-									}}
-									transition={{ duration: 0.6, ease: [0.32, 0.72, 0, 1] }}
-									className={`absolute w-full h-[min(62vw,380px)] sm:h-[400px] md:h-[430px] rounded-[1.5rem] sm:rounded-[2rem] flex flex-col justify-between overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.6)] ${isActive ? 'cursor-pointer hover:shadow-[0_20px_60px_rgba(108,59,137,0.4)]' : 'cursor-pointer'}`}
-									style={{
-										transformStyle: 'preserve-3d',
-									}}
-								>
-									{/* Vibrant Background Gradient Overlay */}
-									<div
-										className='absolute inset-0 opacity-100 -z-20 transform scale-[1.1]'
-										style={{
-											background: `linear-gradient(135deg, ${project.gradient_start || '#6c3b89'}, ${project.gradient_end || '#bf55ec'})`,
+								return (
+									<motion.div
+										key={project.id || index}
+										onClick={() => {
+											if (isActive) setSelectedProject(project)
+											else setActiveIndex(index)
 										}}
-									/>
-									<div className='absolute inset-0 bg-black opacity-20 -z-10 mix-blend-overlay' />
-
-									{/* Center 3D Simulated Icon Float */}
-									<div className='relative flex flex-col items-center justify-center flex-1 overflow-hidden transition-transform group-hover:scale-105'>
-										<motion.div
-											animate={isActive ? { y: [-10, 10, -10] } : {}}
-											transition={{
-												duration: 5,
-												repeat: Infinity,
-												ease: 'easeInOut',
+										animate={{
+											x,
+											scale,
+											zIndex,
+											opacity,
+											rotateY,
+										}}
+										transition={{ duration: 0.6, ease: [0.32, 0.72, 0, 1] }}
+										className={`absolute w-full h-[min(62vw,380px)] sm:h-[400px] md:h-[430px] rounded-[1.5rem] sm:rounded-[2rem] flex flex-col justify-between overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.6)] ${isActive ? 'cursor-pointer hover:shadow-[0_20px_60px_rgba(108,59,137,0.4)]' : 'cursor-pointer'}`}
+										style={{
+											transformStyle: 'preserve-3d',
+										}}
+									>
+										{/* Vibrant Background Gradient Overlay */}
+										<div
+											className='absolute inset-0 opacity-100 -z-20 transform scale-[1.1]'
+											style={{
+												background: `linear-gradient(135deg, ${project.gradient_start || '#6c3b89'}, ${project.gradient_end || '#bf55ec'})`,
 											}}
-										>
-											{getIcon(project.icon_name)}
-										</motion.div>
-									</div>
+										/>
+										<div className='absolute inset-0 bg-black opacity-20 -z-10 mix-blend-overlay' />
 
-									{/* Bottom Frosty */}
-									<div className='h-[105px] w-full bg-white/10 backdrop-blur-2xl border-t border-white/20 px-6 py-5 flex justify-between items-center relative z-10 shadow-inner group-hover:bg-white/15 transition-colors'>
-										<div className='flex flex-col justify-center w-3/4'>
-											<h3 className='text-white font-bold tracking-tight text-[1.1rem] leading-tight mb-1.5 filter drop-shadow-md truncate'>
-												{project.title}
-											</h3>
-											<p className='text-gray-300 text-xs font-semibold tracking-wide flex items-center gap-1.5 uppercase'>
-												<span className='w-1.5 h-1.5 rounded-full bg-[var(--color-brand-light)]'></span>
-												{project.angle}
-											</p>
-										</div>
-
-										<div className='flex flex-col items-end justify-center'>
-											<p className='text-xs font-bold tracking-widest text-white uppercase'>
-												{project.status || 'Live'}
-											</p>
-											<span className='text-[9px] text-white/50 tracking-widest mt-1'>
-												STATUS
-											</span>
-										</div>
-									</div>
-
-									{/* Click Overlay Hint */}
-									<AnimatePresence>
-										{isActive && (
+										{/* Center 3D Simulated Icon Float */}
+										<div className='relative flex flex-col items-center justify-center flex-1 overflow-hidden transition-transform group-hover:scale-105'>
 											<motion.div
-												initial={{ opacity: 0 }}
-												animate={{ opacity: 1 }}
-												exit={{ opacity: 0 }}
-												className='absolute top-0 left-0 right-0 bottom-[105px] bg-black/40 backdrop-blur-[2px] z-50 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300'
+												animate={isActive ? { y: [-10, 10, -10] } : {}}
+												transition={{
+													duration: 5,
+													repeat: Infinity,
+													ease: 'easeInOut',
+												}}
 											>
-												<span className='px-6 py-3 bg-[var(--color-brand)] text-white font-bold rounded-full shadow-2xl text-sm uppercase tracking-widest'>
-													View Case Study
-												</span>
+												{getIcon(project.icon_name)}
 											</motion.div>
-										)}
-									</AnimatePresence>
-								</motion.div>
-							)
-						})}
+										</div>
+
+										{/* Bottom Frosty */}
+										<div className='h-[105px] w-full bg-white/10 backdrop-blur-2xl border-t border-white/20 px-6 py-5 flex justify-between items-center relative z-10 shadow-inner group-hover:bg-white/15 transition-colors'>
+											<div className='flex flex-col justify-center w-3/4'>
+												<h3 className='text-white font-bold tracking-tight text-[1.1rem] leading-tight mb-1.5 filter drop-shadow-md truncate'>
+													{project.title}
+												</h3>
+												<p className='text-gray-300 text-xs font-semibold tracking-wide flex items-center gap-1.5 uppercase'>
+													<span className='w-1.5 h-1.5 rounded-full bg-[var(--color-brand-light)]'></span>
+													{project.angle}
+												</p>
+											</div>
+
+											<div className='flex flex-col items-end justify-center'>
+												<p className='text-xs font-bold tracking-widest text-white uppercase'>
+													{project.status || 'Live'}
+												</p>
+												<span className='text-[9px] text-white/50 tracking-widest mt-1'>
+													STATUS
+												</span>
+											</div>
+										</div>
+
+										{/* Click Overlay Hint */}
+										<AnimatePresence>
+											{isActive && (
+												<motion.div
+													initial={{ opacity: 0 }}
+													animate={{ opacity: 1 }}
+													exit={{ opacity: 0 }}
+													className='absolute top-0 left-0 right-0 bottom-[105px] bg-black/40 backdrop-blur-[2px] z-50 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300'
+												>
+													<span className='px-6 py-3 bg-[var(--color-brand)] text-white font-bold rounded-full shadow-2xl text-sm uppercase tracking-widest'>
+														View Case Study
+													</span>
+												</motion.div>
+											)}
+										</AnimatePresence>
+									</motion.div>
+								)
+							})}
+						</div>
 					</div>
-				</div>
 				)}
 
 				<div className='relative z-10 mt-8 text-center'>
@@ -491,198 +492,203 @@ export default function Projects() {
 								className='fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-8 bg-black/80 backdrop-blur-md overflow-hidden overscroll-none'
 								onClick={() => setSelectedProject(null)}
 							>
-						<motion.div
-							initial={{ opacity: 0, scale: 0.95, y: 20 }}
-							animate={{ opacity: 1, scale: 1, y: 0 }}
-							exit={{ opacity: 0, scale: 0.95, y: 20 }}
-							onClick={(e) => e.stopPropagation()}
-							className='bg-[#050308] border border-white/10 w-[min(100vw-1rem,95vw)] max-h-[min(100dvh-2rem,90vh)] h-[min(90vh,100dvh-2rem)] rounded-2xl sm:rounded-[3rem] shadow-[0_0_150px_rgba(108,59,137,0.4)] overflow-hidden flex flex-col relative max-w-full min-h-0'
-						>
-							{/* Background Glow */}
-							<div
-								className='absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full blur-[120px] opacity-20 pointer-events-none'
-								style={{
-									background: selectedProject.gradient_start || '#6c3b89',
-								}}
-							/>
-							<div
-								className='absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full blur-[120px] opacity-20 pointer-events-none'
-								style={{
-									background: selectedProject.gradient_end || '#bf55ec',
-								}}
-							/>
-
-							{/* Header - Glass Frost */}
-							<div className='z-30 p-4 sm:p-8 md:px-14 flex flex-col sm:flex-row gap-4 sm:gap-0 justify-between items-stretch sm:items-center bg-black/40 backdrop-blur-2xl border-b border-white/5 shrink-0'>
-								<div className='flex items-center gap-3 sm:gap-6 min-w-0'>
-									<div
-										className='w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl flex items-center justify-center border border-white/10 shadow-2xl shrink-0 overflow-hidden'
-										style={{
-											background: `linear-gradient(135deg, ${selectedProject.gradient_start}, ${selectedProject.gradient_end})`,
-										}}
-									>
-										{getIcon(selectedProject.icon_name, 44)}
-									</div>
-									<div className='min-w-0'>
-										<h2 className='text-lg sm:text-2xl md:text-3xl font-black text-white tracking-tight leading-tight break-words'>
-											{selectedProject.title}
-										</h2>
-										<p className='text-[9px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold text-[var(--color-brand-light)] mt-2 opacity-80'>
-											{selectedProject.angle} • {selectedProject.category}
-										</p>
-									</div>
-								</div>
-								<button
-									onClick={() => setSelectedProject(null)}
-									className='w-12 h-12 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center transition-all group'
+								<motion.div
+									initial={{ opacity: 0, scale: 0.95, y: 20 }}
+									animate={{ opacity: 1, scale: 1, y: 0 }}
+									exit={{ opacity: 0, scale: 0.95, y: 20 }}
+									onClick={(e) => e.stopPropagation()}
+									className='bg-[#050308] border border-white/10 w-[min(100vw-1rem,95vw)] max-h-[min(100dvh-2rem,90vh)] h-[min(90vh,100dvh-2rem)] rounded-2xl sm:rounded-[3rem] shadow-[0_0_150px_rgba(108,59,137,0.4)] overflow-hidden flex flex-col relative max-w-full min-h-0'
 								>
-									<X
-										size={20}
-										className='text-gray-400 group-hover:text-white group-hover:rotate-90 transition-all'
+									{/* Background Glow */}
+									<div
+										className='absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full blur-[120px] opacity-20 pointer-events-none'
+										style={{
+											background: selectedProject.gradient_start || '#6c3b89',
+										}}
 									/>
-								</button>
-							</div>
+									<div
+										className='absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full blur-[120px] opacity-20 pointer-events-none'
+										style={{
+											background: selectedProject.gradient_end || '#bf55ec',
+										}}
+									/>
 
-							{/* Content — single scroll region */}
-							<div className='flex-1 min-h-0 overflow-y-auto overscroll-contain [touch-action:pan-y] [-webkit-overflow-scrolling:touch] custom-scrollbar flex flex-col md:grid md:grid-cols-12'>
-								{/* Left: Project Details */}
-								<div className='md:col-span-5 p-5 sm:p-8 md:p-14 md:border-r border-white/5 bg-gradient-to-b from-white/[0.02] to-transparent min-w-0'>
-									<div className='space-y-16'>
-										<section>
-											<label className='text-[10px] uppercase font-black tracking-widest text-[var(--color-brand-light)] mb-6 block opacity-60'>
-												01 / Overview
-											</label>
-											<p className='text-lg font-light leading-relaxed text-gray-300'>
-												{selectedProject.description}
-											</p>
-										</section>
-
-										<section className='space-y-8'>
-											<label className='text-[10px] uppercase font-black tracking-widest text-[var(--color-brand-light)] mb-6 block opacity-60'>
-												02 / Strategic Brief
-											</label>
-											<div className='space-y-6'>
-												<div className='p-8 rounded-3xl bg-white/5 border border-white/10 relative group overflow-hidden'>
-													<div className='absolute inset-0 bg-red-500/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none' />
-													<h4 className='text-sm font-black text-red-400 uppercase tracking-widest mb-4 flex items-center gap-3'>
-														<span className='w-2 h-2 rounded-full bg-red-400' />{' '}
-														The Problem
-													</h4>
-													{renderBulletList(selectedProject.problem)}
-												</div>
-
-												<div className='p-8 rounded-3xl bg-white/5 border border-white/10 relative group overflow-hidden'>
-													<div className='absolute inset-0 bg-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none' />
-													<h4 className='text-sm font-black text-blue-400 uppercase tracking-widest mb-4 flex items-center gap-3'>
-														<span className='w-2 h-2 rounded-full bg-blue-400' />{' '}
-														The Solution
-													</h4>
-													{renderBulletList(selectedProject.solution)}
-												</div>
-											</div>
-										</section>
-
-										<section>
-											<label className='text-[10px] uppercase font-black tracking-widest text-[var(--color-brand-light)] mb-6 block opacity-60'>
-												03 / Key Milestones
-											</label>
-											<div className='grid grid-cols-1 gap-4'>
-												{selectedProject.outcomes?.map((outcome, i) => (
-													<div
-														key={i}
-														className='p-6 rounded-2xl bg-white/5 border border-white/5 flex items-center gap-5 hover:bg-white/[0.08] transition-all group'
-													>
-														<div className='w-10 h-10 rounded-xl bg-[var(--color-brand)]/10 text-[var(--color-brand-light)] flex items-center justify-center font-bold text-sm'>
-															{i + 1}
-														</div>
-														<p className='text-white/90 font-medium'>
-															{outcome}
-														</p>
-													</div>
-												))}
-											</div>
-										</section>
-
-										<div className='pt-10'>
-											<Link
-												href='/contact'
-												className='w-full py-6 bg-white text-black font-black rounded-[2rem] hover:scale-[1.02] transition-all uppercase tracking-widest text-xs shadow-2xl block text-center'
+									{/* Header - Glass Frost */}
+									<div className='z-30 p-4 sm:p-8 md:px-14 flex flex-col sm:flex-row gap-4 sm:gap-0 justify-between items-stretch sm:items-center bg-black/40 backdrop-blur-2xl border-b border-white/5 shrink-0'>
+										<div className='flex items-center gap-3 sm:gap-6 min-w-0'>
+											<div
+												className='w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl flex items-center justify-center border border-white/10 shadow-2xl shrink-0 overflow-hidden'
+												style={{
+													background: `linear-gradient(135deg, ${selectedProject.gradient_start}, ${selectedProject.gradient_end})`,
+												}}
 											>
-												Build with Savvy
-											</Link>
+												{getIcon(selectedProject.icon_name, 44)}
+											</div>
+											<div className='min-w-0'>
+												<h2 className='text-lg sm:text-2xl md:text-3xl font-black text-white tracking-tight leading-tight break-words'>
+													{selectedProject.title}
+												</h2>
+												<p className='text-[9px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold text-[var(--color-brand-light)] mt-2 opacity-80'>
+													{selectedProject.angle} • {selectedProject.category}
+												</p>
+											</div>
 										</div>
-
-										<div className='h-20 md:hidden' />
-									</div>
-								</div>
-
-								{/* Right: Media Showcase */}
-								<div className='md:col-span-7 p-4 sm:p-6 md:p-14 bg-black/20 flex flex-col gap-8 sm:gap-12 min-w-0'>
-									<div className='space-y-6'>
-										<label className='text-[10px] uppercase font-black tracking-widest text-gray-500'>
-											Visual Interface
-										</label>
-										<div className='w-full aspect-video rounded-[2.5rem] overflow-hidden bg-white/5 border border-white/10 shadow-[0_30px_70px_rgba(0,0,0,0.7)] group relative'>
-											{selectedProject.screenshot_url ? (
-												<Image
-													src={selectedProject.screenshot_url}
-													alt='Interface'
-													fill
-													unoptimized
-													className='object-cover group-hover:scale-110 transition-transform duration-[2s]'
-												/>
-											) : (
-												<div className='w-full h-full flex items-center justify-center text-gray-700 italic'>
-													Snapshot Unavailable
-												</div>
-											)}
-										</div>
+										<button
+											onClick={() => setSelectedProject(null)}
+											className='w-12 h-12 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center transition-all group'
+										>
+											<X
+												size={20}
+												className='text-gray-400 group-hover:text-white group-hover:rotate-90 transition-all'
+											/>
+										</button>
 									</div>
 
-									<div className='space-y-6'>
-										<label className='text-[10px] uppercase font-black tracking-widest text-gray-500'>
-											Functional Walkthrough
-										</label>
-										<div className='w-full aspect-video rounded-[2.5rem] overflow-hidden bg-black border border-white/10 shadow-[0_30px_70px_rgba(0,0,0,0.7)] relative'>
-											{selectedProject.video_url ? (
-												selectedProject.video_url.includes('youtube.com') ||
-												selectedProject.video_url.includes('loom.com') ? (
-													<div
-														className='w-full h-full flex items-center justify-center group cursor-pointer relative'
-														onClick={() =>
-															window.open(selectedProject.video_url, '_blank')
-														}
-													>
-														<div className='absolute inset-0 bg-gradient-to-tr from-[var(--color-brand)]/10 to-transparent' />
-														<div className='w-24 h-24 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 flex items-center justify-center group-hover:bg-[var(--color-brand)] group-hover:border-[var(--color-brand)] transition-all duration-300 scale-90 group-hover:scale-100'>
-															<div className='w-0 h-0 border-t-[12px] border-t-transparent border-l-[22px] border-l-white border-b-[12px] border-b-transparent ml-2' />
+									{/* Content — single scroll region */}
+									<div className='flex-1 min-h-0 overflow-y-auto overscroll-contain [touch-action:pan-y] [-webkit-overflow-scrolling:touch] custom-scrollbar flex flex-col md:grid md:grid-cols-12'>
+										{/* Left: Project Details */}
+										<div className='md:col-span-5 p-5 sm:p-8 md:p-14 md:border-r border-white/5 bg-gradient-to-b from-white/[0.02] to-transparent min-w-0'>
+											<div className='space-y-16'>
+												<section>
+													<label className='text-[10px] uppercase font-black tracking-widest text-[var(--color-brand-light)] mb-6 block opacity-60'>
+														01 / Overview
+													</label>
+													<p className='text-lg font-light leading-relaxed text-gray-300'>
+														{selectedProject.description}
+													</p>
+												</section>
+
+												<section className='space-y-8'>
+													<label className='text-[10px] uppercase font-black tracking-widest text-[var(--color-brand-light)] mb-6 block opacity-60'>
+														02 / Strategic Brief
+													</label>
+													<div className='space-y-6'>
+														<div className='p-8 rounded-3xl bg-white/5 border border-white/10 relative group overflow-hidden'>
+															<div className='absolute inset-0 bg-red-500/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none' />
+															<h4 className='text-sm font-black text-red-400 uppercase tracking-widest mb-4 flex items-center gap-3'>
+																<span className='w-2 h-2 rounded-full bg-red-400' />{' '}
+																The Problem
+															</h4>
+															{renderBulletList(selectedProject.problem)}
 														</div>
-														<p className='absolute bottom-8 text-xs font-bold text-white/40 tracking-widest uppercase'>
-															Launch Full Walkthrough
-														</p>
+
+														<div className='p-8 rounded-3xl bg-white/5 border border-white/10 relative group overflow-hidden'>
+															<div className='absolute inset-0 bg-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none' />
+															<h4 className='text-sm font-black text-blue-400 uppercase tracking-widest mb-4 flex items-center gap-3'>
+																<span className='w-2 h-2 rounded-full bg-blue-400' />{' '}
+																The Solution
+															</h4>
+															{renderBulletList(selectedProject.solution)}
+														</div>
 													</div>
-												) : (
-													<video
-														src={selectedProject.video_url}
-														controls
-														playsInline
-														preload='auto'
-														className='w-full h-full object-contain'
-														poster={selectedProject.screenshot_url || undefined}
-													/>
-												)
-											) : (
-												<div className='w-full h-full flex items-center justify-center text-gray-700 italic'>
-													Broadcast Coming Soon
+												</section>
+
+												<section>
+													<label className='text-[10px] uppercase font-black tracking-widest text-[var(--color-brand-light)] mb-6 block opacity-60'>
+														03 / Key Milestones
+													</label>
+													<div className='grid grid-cols-1 gap-4'>
+														{selectedProject.outcomes?.map((outcome, i) => (
+															<div
+																key={i}
+																className='p-6 rounded-2xl bg-white/5 border border-white/5 flex items-center gap-5 hover:bg-white/[0.08] transition-all group'
+															>
+																<div className='w-10 h-10 rounded-xl bg-[var(--color-brand)]/10 text-[var(--color-brand-light)] flex items-center justify-center font-bold text-sm'>
+																	{i + 1}
+																</div>
+																<p className='text-white/90 font-medium'>
+																	{outcome}
+																</p>
+															</div>
+														))}
+													</div>
+												</section>
+
+												<div className='pt-10'>
+													<Link
+														href='/contact'
+														className='w-full py-6 bg-white text-black font-black rounded-[2rem] hover:scale-[1.02] transition-all uppercase tracking-widest text-xs shadow-2xl block text-center'
+													>
+														Build with Savvy
+													</Link>
 												</div>
-											)}
+
+												<div className='h-20 md:hidden' />
+											</div>
+										</div>
+
+										{/* Right: Media Showcase */}
+										<div className='md:col-span-7 p-4 sm:p-6 md:p-14 bg-black/20 flex flex-col gap-8 sm:gap-12 min-w-0'>
+											<div className='space-y-6'>
+												<label className='text-[10px] uppercase font-black tracking-widest text-gray-500'>
+													Visual Interface
+												</label>
+												<div className='w-full aspect-video rounded-[2.5rem] overflow-hidden bg-white/5 border border-white/10 shadow-[0_30px_70px_rgba(0,0,0,0.7)] group relative'>
+													{selectedProject.screenshot_url ? (
+														<Image
+															src={selectedProject.screenshot_url}
+															alt='Interface'
+															fill
+															unoptimized
+															className='object-cover group-hover:scale-110 transition-transform duration-[2s]'
+														/>
+													) : (
+														<div className='w-full h-full flex items-center justify-center text-gray-700 italic'>
+															Snapshot Unavailable
+														</div>
+													)}
+												</div>
+											</div>
+
+											<div className='space-y-6'>
+												<label className='text-[10px] uppercase font-black tracking-widest text-gray-500'>
+													Functional Walkthrough
+												</label>
+												<div className='w-full aspect-video rounded-[2.5rem] overflow-hidden bg-black border border-white/10 shadow-[0_30px_70px_rgba(0,0,0,0.7)] relative'>
+													{selectedProject.video_url ? (
+														selectedProject.video_url.includes('youtube.com') ||
+														selectedProject.video_url.includes('loom.com') ? (
+															<div
+																className='w-full h-full flex items-center justify-center group cursor-pointer relative'
+																onClick={() =>
+																	window.open(
+																		selectedProject.video_url,
+																		'_blank',
+																	)
+																}
+															>
+																<div className='absolute inset-0 bg-gradient-to-tr from-[var(--color-brand)]/10 to-transparent' />
+																<div className='w-24 h-24 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 flex items-center justify-center group-hover:bg-[var(--color-brand)] group-hover:border-[var(--color-brand)] transition-all duration-300 scale-90 group-hover:scale-100'>
+																	<div className='w-0 h-0 border-t-[12px] border-t-transparent border-l-[22px] border-l-white border-b-[12px] border-b-transparent ml-2' />
+																</div>
+																<p className='absolute bottom-8 text-xs font-bold text-white/40 tracking-widest uppercase'>
+																	Launch Full Walkthrough
+																</p>
+															</div>
+														) : (
+															<video
+																src={selectedProject.video_url}
+																controls
+																playsInline
+																preload='auto'
+																className='w-full h-full object-contain'
+																poster={
+																	selectedProject.screenshot_url || undefined
+																}
+															/>
+														)
+													) : (
+														<div className='w-full h-full flex items-center justify-center text-gray-700 italic'>
+															Broadcast Coming Soon
+														</div>
+													)}
+												</div>
+											</div>
+
+											<div className='h-20' />
 										</div>
 									</div>
-
-									<div className='h-20' />
-								</div>
-							</div>
-						</motion.div>
+								</motion.div>
 							</motion.div>
 						)}
 					</AnimatePresence>,
