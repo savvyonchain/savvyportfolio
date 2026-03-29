@@ -31,7 +31,7 @@ export default function Projects() {
 		rotate: 25,
 	})
 	const scrollYRef = useRef(0)
-	const [mobileShowAll, setMobileShowAll] = useState(false)
+	const [portfolioShowAll, setPortfolioShowAll] = useState(false)
 	const [portalReady, setPortalReady] = useState(false)
 
 	useEffect(() => {
@@ -214,115 +214,141 @@ export default function Projects() {
 					</p>
 				</div>
 
-				{/* Mobile: Swipe vs View all + projects */}
-				<div className='md:hidden w-full -mx-4 px-4 space-y-4'>
-					<div className='flex justify-center gap-2'>
-						<button
-							type='button'
-							onClick={() => setMobileShowAll(false)}
-							className={`px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all ${
-								!mobileShowAll
-									? 'bg-[var(--color-brand)] border-[var(--color-brand)] text-white shadow-[0_0_20px_rgba(108,59,137,0.4)]'
-									: 'bg-white/5 border-white/15 text-gray-400 hover:border-white/30 hover:text-white'
-							}`}
-						>
-							Swipe
-						</button>
-						<button
-							type='button'
-							onClick={() => setMobileShowAll(true)}
-							className={`px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all ${
-								mobileShowAll
-									? 'bg-[var(--color-brand)] border-[var(--color-brand)] text-white shadow-[0_0_20px_rgba(108,59,137,0.4)]'
-									: 'bg-white/5 border-white/15 text-gray-400 hover:border-white/30 hover:text-white'
-							}`}
-						>
-							View all
-						</button>
-					</div>
-
-					<div
-						className={
-							mobileShowAll
-								? 'grid grid-cols-2 gap-3'
-								: 'flex gap-4 overflow-x-auto snap-x snap-mandatory py-4 scroll-px-4 overscroll-x-contain touch-pan-x [-webkit-overflow-scrolling:touch] [scrollbar-width:thin] items-center min-h-0'
-						}
+				{/* Swipe / View all — mobile + desktop */}
+				<div className='flex justify-center gap-2 mb-6 md:mb-8'>
+					<button
+						type='button'
+						onClick={() => setPortfolioShowAll(false)}
+						className={`px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all ${
+							!portfolioShowAll
+								? 'bg-[var(--color-brand)] border-[var(--color-brand)] text-white shadow-[0_0_20px_rgba(108,59,137,0.4)]'
+								: 'bg-white/5 border-white/15 text-gray-400 hover:border-white/30 hover:text-white'
+						}`}
 					>
-						{projects.map((project, i) => (
-							<motion.div
-								key={project.id ?? i}
-								role='button'
-								tabIndex={0}
-								onClick={() => setSelectedProject(project)}
-								onKeyDown={(e) => {
-									if (e.key === 'Enter' || e.key === ' ') {
-										e.preventDefault()
-										setSelectedProject(project)
-									}
-								}}
-								className={
-									mobileShowAll
-										? 'w-full h-[200px] rounded-[1.25rem] flex flex-col justify-between overflow-hidden shadow-[0_12px_36px_rgba(0,0,0,0.55)] cursor-pointer relative border border-white/10'
-										: 'snap-center shrink-0 w-[min(84vw,268px)] h-[clamp(248px,min(54svh,316px),316px)] rounded-[1.5rem] flex flex-col justify-between overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.6)] cursor-pointer relative border border-white/10 box-border'
-								}
-								whileTap={{ scale: 0.98 }}
-							>
-								<div
-									className='absolute inset-0 opacity-100 -z-20 transform scale-[1.1]'
-									style={{
-										background: `linear-gradient(135deg, ${project.gradient_start || '#6c3b89'}, ${project.gradient_end || '#bf55ec'})`,
+						Swipe
+					</button>
+					<button
+						type='button'
+						onClick={() => setPortfolioShowAll(true)}
+						className={`px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all ${
+							portfolioShowAll
+								? 'bg-[var(--color-brand)] border-[var(--color-brand)] text-white shadow-[0_0_20px_rgba(108,59,137,0.4)]'
+								: 'bg-white/5 border-white/15 text-gray-400 hover:border-white/30 hover:text-white'
+						}`}
+					>
+						View all
+					</button>
+				</div>
+
+				{!portfolioShowAll && (
+					<div className='md:hidden w-full -mx-4 px-4'>
+						<div className='flex gap-4 overflow-x-auto snap-x snap-mandatory py-4 scroll-px-4 overscroll-x-contain touch-pan-x [-webkit-overflow-scrolling:touch] [scrollbar-width:thin] items-center min-h-0'>
+							{projects.map((project, i) => (
+								<motion.div
+									key={project.id ?? i}
+									role='button'
+									tabIndex={0}
+									onClick={() => setSelectedProject(project)}
+									onKeyDown={(e) => {
+										if (e.key === 'Enter' || e.key === ' ') {
+											e.preventDefault()
+											setSelectedProject(project)
+										}
 									}}
-								/>
-								<div className='absolute inset-0 bg-black opacity-20 -z-10 mix-blend-overlay' />
-
-								<div className='relative flex flex-col items-center justify-center flex-1 overflow-hidden min-h-0'>
-									{getIcon(project.icon_name, mobileShowAll ? 52 : 100)}
-								</div>
-
-								<div
-									className={`w-full bg-white/10 backdrop-blur-2xl border-t border-white/20 flex justify-between items-center relative z-10 shadow-inner ${
-										mobileShowAll
-											? 'h-[72px] px-3 py-2'
-											: 'h-[105px] px-6 py-5'
-									}`}
+									className='snap-center shrink-0 w-[min(84vw,268px)] h-[clamp(248px,min(54svh,316px),316px)] rounded-[1.5rem] flex flex-col justify-between overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.6)] cursor-pointer relative border border-white/10 box-border'
+									whileTap={{ scale: 0.98 }}
 								>
-									<div className='flex flex-col justify-center min-w-0 flex-1 pr-2'>
-										<h3
-											className={`text-white font-bold tracking-tight leading-tight filter drop-shadow-md truncate ${
-												mobileShowAll ? 'text-xs mb-0.5' : 'text-[1.1rem] mb-1.5'
-											}`}
-										>
-											{project.title}
-										</h3>
-										<p
-											className={`text-gray-300 font-semibold tracking-wide flex items-center gap-1 uppercase ${
-												mobileShowAll ? 'text-[9px] line-clamp-1' : 'text-xs gap-1.5'
-											}`}
-										>
-											<span className='w-1.5 h-1.5 rounded-full bg-[var(--color-brand-light)] shrink-0'></span>
-											<span className='truncate'>{project.angle}</span>
-										</p>
+									<div
+										className='absolute inset-0 opacity-100 -z-20 transform scale-[1.1]'
+										style={{
+											background: `linear-gradient(135deg, ${project.gradient_start || '#6c3b89'}, ${project.gradient_end || '#bf55ec'})`,
+										}}
+									/>
+									<div className='absolute inset-0 bg-black opacity-20 -z-10 mix-blend-overlay' />
+
+									<div className='relative flex flex-col items-center justify-center flex-1 overflow-hidden min-h-0'>
+										{getIcon(project.icon_name, 100)}
 									</div>
-									<div className='flex flex-col items-end justify-center shrink-0'>
-										<p
-											className={`font-bold tracking-widest text-white uppercase ${
-												mobileShowAll ? 'text-[9px]' : 'text-xs'
-											}`}
-										>
-											{project.status || 'Live'}
-										</p>
-										{!mobileShowAll && (
+
+									<div className='w-full bg-white/10 backdrop-blur-2xl border-t border-white/20 flex justify-between items-center relative z-10 shadow-inner h-[105px] px-6 py-5'>
+										<div className='flex flex-col justify-center min-w-0 flex-1 pr-2'>
+											<h3 className='text-white font-bold tracking-tight text-[1.1rem] leading-tight mb-1.5 filter drop-shadow-md truncate'>
+												{project.title}
+											</h3>
+											<p className='text-gray-300 text-xs font-semibold tracking-wide flex items-center gap-1.5 uppercase'>
+												<span className='w-1.5 h-1.5 rounded-full bg-[var(--color-brand-light)] shrink-0'></span>
+												<span className='truncate'>{project.angle}</span>
+											</p>
+										</div>
+										<div className='flex flex-col items-end justify-center shrink-0'>
+											<p className='text-xs font-bold tracking-widest text-white uppercase'>
+												{project.status || 'Live'}
+											</p>
 											<span className='text-[9px] text-white/50 tracking-widest mt-1'>
 												STATUS
 											</span>
-										)}
+										</div>
 									</div>
-								</div>
-							</motion.div>
-						))}
+								</motion.div>
+							))}
+						</div>
 					</div>
-				</div>
+				)}
 
+				{portfolioShowAll && (
+					<div className='w-full max-w-7xl mx-auto px-4 sm:px-8 mb-4 md:mb-0'>
+						<div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6'>
+							{projects.map((project, i) => (
+								<motion.div
+									key={project.id ?? i}
+									role='button'
+									tabIndex={0}
+									onClick={() => setSelectedProject(project)}
+									onKeyDown={(e) => {
+										if (e.key === 'Enter' || e.key === ' ') {
+											e.preventDefault()
+											setSelectedProject(project)
+										}
+									}}
+									className='w-full h-[200px] md:h-[220px] rounded-[1.25rem] flex flex-col justify-between overflow-hidden shadow-[0_12px_36px_rgba(0,0,0,0.55)] cursor-pointer relative border border-white/10'
+									whileHover={{ scale: 1.02 }}
+									whileTap={{ scale: 0.98 }}
+								>
+									<div
+										className='absolute inset-0 opacity-100 -z-20 transform scale-[1.1]'
+										style={{
+											background: `linear-gradient(135deg, ${project.gradient_start || '#6c3b89'}, ${project.gradient_end || '#bf55ec'})`,
+										}}
+									/>
+									<div className='absolute inset-0 bg-black opacity-20 -z-10 mix-blend-overlay' />
+
+									<div className='relative flex flex-col items-center justify-center flex-1 overflow-hidden min-h-0'>
+										{getIcon(project.icon_name, 52)}
+									</div>
+
+									<div className='w-full bg-white/10 backdrop-blur-2xl border-t border-white/20 flex justify-between items-center relative z-10 shadow-inner h-[72px] px-3 py-2'>
+										<div className='flex flex-col justify-center min-w-0 flex-1 pr-2'>
+											<h3 className='text-white font-bold tracking-tight text-xs mb-0.5 leading-tight filter drop-shadow-md truncate'>
+												{project.title}
+											</h3>
+											<p className='text-gray-300 text-[9px] font-semibold tracking-wide flex items-center gap-1 uppercase line-clamp-1'>
+												<span className='w-1.5 h-1.5 rounded-full bg-[var(--color-brand-light)] shrink-0'></span>
+												<span className='truncate'>{project.angle}</span>
+											</p>
+										</div>
+										<div className='flex flex-col items-end justify-center shrink-0'>
+											<p className='text-[9px] font-bold tracking-widest text-white uppercase'>
+												{project.status || 'Live'}
+											</p>
+										</div>
+									</div>
+								</motion.div>
+							))}
+						</div>
+					</div>
+				)}
+
+				{!portfolioShowAll && (
 				<div className='relative h-[min(72vw,420px)] sm:h-[460px] md:h-[500px] w-full max-w-full hidden md:flex items-center justify-center -mt-4 sm:-mt-8 min-w-0'>
 					{/* Navigation Arrows (desktop) */}
 					<button
@@ -441,6 +467,7 @@ export default function Projects() {
 						})}
 					</div>
 				</div>
+				)}
 
 				<div className='relative z-10 mt-8 text-center'>
 					<Link
