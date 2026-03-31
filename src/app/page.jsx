@@ -17,7 +17,7 @@ export default function Home() {
 	return (
 		<div className='w-full min-w-0 overflow-x-hidden'>
 			{/* 01. Hero Section */}
-			<section className='min-h-[90vh] flex items-center justify-center overflow-x-hidden w-full relative pt-10 pb-20'>
+			<section className='min-h-[90vh] flex items-center justify-center overflow-x-hidden w-full relative pt-6 pb-10'>
 				<div className='grid items-center grid-cols-1 gap-10 sm:gap-16 px-4 sm:px-6 md:px-8 mx-auto max-w-7xl md:grid-cols-2'>
 					{/* Left Content */}
 					<motion.div
@@ -122,9 +122,7 @@ export default function Home() {
 										ease: 'linear',
 									}}
 								>
-									<Zap
-										className='w-6 h-6 sm:w-8 sm:h-8 filter drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]'
-									/>
+									<Zap className='w-6 h-6 sm:w-8 sm:h-8 filter drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]' />
 								</motion.div>
 							</motion.div>
 							<motion.div
@@ -137,17 +135,23 @@ export default function Home() {
 								}}
 								className='absolute bottom-[10%] right-0 sm:-right-[4%] md:-right-[5%] p-2.5 sm:p-4 bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl sm:rounded-2xl shadow-2xl flex items-center justify-center text-white'
 							>
-								<Bot
-									className='w-6 h-6 sm:w-8 sm:h-8 filter drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]'
-								/>
+								<Bot className='w-6 h-6 sm:w-8 sm:h-8 filter drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]' />
 							</motion.div>
 						</motion.div>
 					</motion.div>
 				</div>
 			</section>
 
-			{/* 02. Professional Summary (Introduction) */}
-			<section className='max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-16 sm:py-24 md:py-32 relative'>
+			{/* 02. Featured Solutions (The Evidence) */}
+			<div className='w-full bg-black/40 relative overflow-hidden py-8 sm:py-12 md:py-16'>
+				{/* Background ambient light */}
+				<div className='absolute top-0 right-0 w-[40vw] h-[40vw] bg-[var(--color-brand)]/5 blur-[150px] rounded-full -z-10' />
+				<div className='absolute bottom-0 left-0 w-[30vw] h-[30vw] bg-[var(--color-secondary)]/5 blur-[120px] rounded-full -z-10' />
+				<Projects />
+			</div>
+
+			{/* 03. Professional Summary (Introduction) */}
+			<section className='max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-8 sm:py-12 md:py-16 relative'>
 				<div className='absolute top-0 left-1/2 -translate-x-1/2 w-[60vw] h-[60vw] bg-[var(--color-brand)]/5 blur-[120px] -z-10 rounded-full animate-pulse' />
 
 				<motion.div
@@ -207,42 +211,34 @@ export default function Home() {
 				</motion.div>
 			</section>
 
-			{/* 03. Featured Solutions (The Evidence) */}
-			<div className='w-full bg-black/40 relative overflow-hidden py-16 sm:py-24 md:py-32'>
-				{/* Background ambient light */}
-				<div className='absolute top-0 right-0 w-[40vw] h-[40vw] bg-[var(--color-brand)]/5 blur-[150px] rounded-full -z-10' />
-				<div className='absolute bottom-0 left-0 w-[30vw] h-[30vw] bg-[var(--color-secondary)]/5 blur-[120px] rounded-full -z-10' />
-				<Projects />
-			</div>
-
 			{/* 04. Services (The Offer) */}
-			<section className='py-16 sm:py-24 md:py-32 bg-white/[0.01]'>
+			<section className='py-8 sm:py-12 md:py-16 bg-white/[0.01]'>
 				<ServicesSection />
 			</section>
 
 			{/* 05. The Arsenal (The Capabilities) */}
-			<section className='py-16 sm:py-24 md:py-32 space-y-16 sm:space-y-24 md:space-y-32'>
+			<section className='py-8 sm:py-12 md:py-16 space-y-8 sm:space-y-12 md:space-y-16'>
 				<ToolsCarousel />
 				<SkillsGrid />
 			</section>
 
 			{/* 06. Experience (The Authority) */}
-			<section className='py-16 sm:py-24 md:py-32'>
+			<section className='py-8 sm:py-12 md:py-16'>
 				<ExperienceSection />
 			</section>
 
 			{/* 07. My Process (The Methodology) */}
-			<section className='py-16 sm:py-24 md:py-32 bg-white/[0.01]'>
+			<section className='py-8 sm:py-12 md:py-16 bg-white/[0.01]'>
 				<ProcessSection />
 			</section>
 
 			{/* 08. Testimonials (The Social Proof) */}
-			<section className='py-16 sm:py-24 md:py-32'>
+			<section className='py-8 sm:py-12 md:py-16'>
 				<TestimonialsSection />
 			</section>
 
 			{/* 09. Final CTA (The Conversion) */}
-			<section className='max-w-5xl px-4 sm:px-6 md:px-8 py-24 sm:py-32 mx-auto text-center'>
+			<section className='max-w-5xl px-4 sm:px-6 md:px-8 py-12 sm:py-16 mx-auto text-center'>
 				<motion.div
 					initial={{ opacity: 0, scale: 0.95 }}
 					whileInView={{ opacity: 1, scale: 1 }}

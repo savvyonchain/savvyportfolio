@@ -54,3 +54,17 @@
 	-webkit-text-fill-color: transparent;
 	background-clip: text;
 }
+
+/* Hide horizontal scrollbar */
+html::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+html::-webkit-scrollbar {
+	height: 0;
+	width: 0;
+}
+
+body {
+	scrollbar-width: none;
+}

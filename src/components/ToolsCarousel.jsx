@@ -52,8 +52,18 @@ export default function ToolsCarousel() {
 				</p>
 			</div>
 
-			<div className='relative h-[min(90vw,420px)] sm:h-[460px] md:h-[500px] w-full max-w-full flex items-center justify-center perspective-[2000px] preserve-3d overflow-x-hidden'>
-				<div className={`relative preserve-3d tools-orbit-wheel ${orbit.cardClass}`}>
+			{/* Carousel container with scrollbar hidden */}
+			<div
+				className='relative h-[min(90vw,420px)] sm:h-[460px] md:h-[500px] w-full max-w-full flex items-center justify-center perspective-[2000px] preserve-3d overflow-x-hidden'
+				style={{
+					overflowX: 'hidden',
+					scrollbarWidth: 'none', // Firefox
+					msOverflowStyle: 'none', // IE/Edge
+				}}
+			>
+				<div
+					className={`relative preserve-3d tools-orbit-wheel ${orbit.cardClass}`}
+				>
 					{tools.map((tool, i) => {
 						const angle = (i / tools.length) * 360
 						const radius = orbit.radius
@@ -99,6 +109,21 @@ export default function ToolsCarousel() {
 				</div>
 			</div>
 
+			{/* Hide scrollbar only for this section */}
+			<style jsx>{`
+				.relative.h-\[min\(90vw,
+				420px\)\].sm\:h-\[460px\].md\:h-\[500px\]::-webkit-scrollbar {
+					display: none;
+					height: 0;
+					width: 0;
+				}
+				.relative.h-\[min\(90vw,
+				420px\)\].sm\:h-\[460px\].md\:h-\[500px\] {
+					scrollbar-width: none;
+					-ms-overflow-style: none;
+				}
+			`}</style>
+
 			<style jsx>{`
 				.preserve-3d {
 					transform-style: preserve-3d;
@@ -108,6 +133,19 @@ export default function ToolsCarousel() {
 				}
 				.backface-hidden {
 					backface-visibility: hidden;
+				}
+			`}</style>
+
+			<style jsx global>{`
+				.hide-scrollbar {
+					overflow-x: hidden !important;
+					scrollbar-width: none !important;
+					-ms-overflow-style: none !important;
+				}
+				.hide-scrollbar::-webkit-scrollbar {
+					display: none !important;
+					width: 0 !important;
+					height: 0 !important;
 				}
 			`}</style>
 		</section>

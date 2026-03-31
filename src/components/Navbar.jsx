@@ -17,7 +17,7 @@ export default function Navbar() {
 	const [mobileOpen, setMobileOpen] = useState(false)
 
 	return (
-		<nav className='py-6 relative z-50 backdrop-blur-xl bg-white/5 border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.1)] text-white'>
+		<nav className='sticky top-0 py-6 relative z-50 backdrop-blur-xl bg-white/5 border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.1)] text-white'>
 			<div className='max-w-7xl mx-auto px-4 sm:px-6 md:px-8 flex justify-between items-center'>
 				<Link
 					href='/'
