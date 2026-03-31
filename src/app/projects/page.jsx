@@ -33,6 +33,7 @@ export default function Projects() {
 	const scrollYRef = useRef(0)
 	const [portfolioShowAll, setPortfolioShowAll] = useState(false)
 	const [portalReady, setPortalReady] = useState(false)
+	const [videoLoadingId, setVideoLoadingId] = useState(null)
 
 	useEffect(() => {
 		setPortalReady(true)
@@ -666,16 +667,49 @@ export default function Projects() {
 																</p>
 															</div>
 														) : (
-															<video
-																src={selectedProject.video_url}
-																controls
-																playsInline
-																preload='auto'
-																className='w-full h-full object-contain'
-																poster={
-																	selectedProject.screenshot_url || undefined
-																}
-															/>
+															<>
+																<video
+																	key={selectedProject.id}
+																	controls
+																	playsInline
+																	width='1280'
+																	height='720'
+																	preload='metadata'
+																	className='w-full h-full object-contain'
+																	poster={
+																		selectedProject.screenshot_url || undefined
+																	}
+																	onLoadStart={() =>
+																		setVideoLoadingId(selectedProject.id)
+																	}
+																	onCanPlay={() => setVideoLoadingId(null)}
+																	onLoadedData={() => setVideoLoadingId(null)}
+																>
+																	<source
+																		src={selectedProject.video_url}
+																		type='video/mp4'
+																	/>
+																	Your browser does not support the video tag.
+																</video>
+																{videoLoadingId === selectedProject.id && (
+																	<div className='absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm'>
+																		<div className='flex flex-col items-center gap-4'>
+																			<motion.div
+																				animate={{ rotate: 360 }}
+																				transition={{
+																					duration: 2,
+																					repeat: Infinity,
+																					ease: 'linear',
+																				}}
+																				className='w-10 h-10 border-2 border-white/20 border-t-[var(--color-brand)] rounded-full'
+																			/>
+																			<p className='text-xs text-white/60 font-light tracking-widest'>
+																				Loading Video...
+																			</p>
+																		</div>
+																	</div>
+																)}
+															</>
 														)
 													) : (
 														<div className='w-full h-full flex items-center justify-center text-gray-700 italic'>
