@@ -9,7 +9,9 @@ export function useSoundEffects() {
 	useEffect(() => {
 		const initAudioContext = () => {
 			if (!audioContextRef.current) {
-				audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)()
+				audioContextRef.current = new (
+					window.AudioContext || window.webkitAudioContext
+				)()
 			}
 		}
 

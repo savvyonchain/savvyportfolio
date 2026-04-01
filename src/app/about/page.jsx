@@ -83,16 +83,17 @@ export default function About() {
 
 							<div className='relative z-10 space-y-8'>
 								<p className='text-lg font-light leading-relaxed text-left text-gray-300 md:text-2xl'>
-									AI Automation Architect with{' '}
+									AI Automation Architect{' '}
 									<span className='font-bold text-white'>
 										4+ years of experience
 									</span>{' '}
-									bridging business strategy and AI automation.
+									saving businesses time and increansing efficiency through
+									intelligent automation.
 								</p>
 								<p className='text-base font-light leading-relaxed text-left text-gray-400 md:text-lg'>
-									Expertise in designing and deploying AI-powered solutions
-									using no/low code tools to automate complex business
-									processes. Proven track record of reducing manual workload by{' '}
+									Skilled in leveraging no-code and low-code platforms to design
+									scalable, maintainable solutions that integrate seamlessly
+									with existing workflows.{' '}
 									<span className='text-[var(--color-brand-light)] font-bold'>
 										15-20 hours weekly
 									</span>{' '}

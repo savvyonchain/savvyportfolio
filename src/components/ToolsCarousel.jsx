@@ -29,7 +29,7 @@ export default function ToolsCarousel() {
 			setIsMobile(mobile)
 			if (mobile) setViewMode('grid')
 			else setViewMode('carousel')
-			
+
 			if (w < 480) setOrbit({ radius: 150, cardClass: 'w-44 h-56' })
 			else if (w < 640) setOrbit({ radius: 220, cardClass: 'w-52 h-64' })
 			else if (w < 768) setOrbit({ radius: 300, cardClass: 'w-56 h-72' })
@@ -47,49 +47,49 @@ export default function ToolsCarousel() {
 			{/* Background ambient light */}
 			<div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[var(--color-brand)]/5 blur-[120px] rounded-full -z-10' />
 
-<div className='max-w-7xl mx-auto px-4 sm:px-6 md:px-8 mb-8 sm:mb-24'>
-			<div className='flex flex-col gap-4'>
-				<div className='text-center'>
-					<h2
-						className='text-3xl sm:text-4xl md:text-6xl font-black text-white mb-2 uppercase tracking-tighter'
-						style={{ fontFamily: 'var(--font-space)' }}
-					>
-						Tools
-					</h2>
-					<p className='text-gray-500 font-light text-base sm:text-lg tracking-widest uppercase'>
-						The engines behind the automation
-					</p>
-				</div>
+			<div className='max-w-7xl mx-auto px-4 sm:px-6 md:px-8 mb-8 sm:mb-24'>
+				<div className='flex flex-col gap-4'>
+					<div className='text-center'>
+						<h2
+							className='text-3xl sm:text-4xl md:text-6xl font-black text-white mb-2 uppercase tracking-tighter'
+							style={{ fontFamily: 'var(--font-space)' }}
+						>
+							Tools
+						</h2>
+						<p className='text-gray-500 font-light text-base sm:text-lg tracking-widest uppercase'>
+							The engines behind the automation
+						</p>
+					</div>
 
-{/* View mode toggle - only show on sm+ */}
-			{!isMobile && (
-				<div className='flex gap-2 justify-center'>
-					<button
-						onClick={() => setViewMode('carousel')}
-						className={`px-3 sm:px-4 py-2 rounded-lg font-semibold uppercase tracking-wider text-xs sm:text-sm transition-all whitespace-nowrap ${
-							viewMode === 'carousel'
-								? 'bg-[var(--color-brand)] text-white shadow-[0_0_20px_rgba(108,59,137,0.6)]'
-								: 'bg-white/10 text-gray-300 hover:bg-white/20'
-						}`}
-					>
-						<RotateCcw size={14} className='inline mr-1 sm:mr-2' />
-						<span className='hidden sm:inline'>Carousel</span>
-						<span className='sm:hidden'>Rotate</span>
-					</button>
-					<button
-						onClick={() => setViewMode('grid')}
-						className={`px-3 sm:px-4 py-2 rounded-lg font-semibold uppercase tracking-wider text-xs sm:text-sm transition-all whitespace-nowrap ${
-							viewMode === 'grid'
-								? 'bg-[var(--color-brand)] text-white shadow-[0_0_20px_rgba(108,59,137,0.6)]'
-								: 'bg-white/10 text-gray-300 hover:bg-white/20'
-						}`}
-					>
-						<Grid3x3 size={14} className='inline mr-1 sm:mr-2' />
-						<span className='hidden sm:inline'>View All</span>
-						<span className='sm:hidden'>Grid</span>
-					</button>
-				</div>
-			)}
+					{/* View mode toggle - only show on sm+ */}
+					{!isMobile && (
+						<div className='flex gap-2 justify-center'>
+							<button
+								onClick={() => setViewMode('carousel')}
+								className={`px-3 sm:px-4 py-2 rounded-lg font-semibold uppercase tracking-wider text-xs sm:text-sm transition-all whitespace-nowrap ${
+									viewMode === 'carousel'
+										? 'bg-[var(--color-brand)] text-white shadow-[0_0_20px_rgba(108,59,137,0.6)]'
+										: 'bg-white/10 text-gray-300 hover:bg-white/20'
+								}`}
+							>
+								<RotateCcw size={14} className='inline mr-1 sm:mr-2' />
+								<span className='hidden sm:inline'>Carousel</span>
+								<span className='sm:hidden'>Rotate</span>
+							</button>
+							<button
+								onClick={() => setViewMode('grid')}
+								className={`px-3 sm:px-4 py-2 rounded-lg font-semibold uppercase tracking-wider text-xs sm:text-sm transition-all whitespace-nowrap ${
+									viewMode === 'grid'
+										? 'bg-[var(--color-brand)] text-white shadow-[0_0_20px_rgba(108,59,137,0.6)]'
+										: 'bg-white/10 text-gray-300 hover:bg-white/20'
+								}`}
+							>
+								<Grid3x3 size={14} className='inline mr-1 sm:mr-2' />
+								<span className='hidden sm:inline'>View All</span>
+								<span className='sm:hidden'>Grid</span>
+							</button>
+						</div>
+					)}
 				</div>
 			</div>
 

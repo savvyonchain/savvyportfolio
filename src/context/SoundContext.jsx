@@ -84,11 +84,7 @@ export function SoundProvider({ children }) {
 		},
 	}
 
-	return (
-		<SoundContext.Provider value={value}>
-			{children}
-		</SoundContext.Provider>
-	)
+	return <SoundContext.Provider value={value}>{children}</SoundContext.Provider>
 }
 
 export function useSounds() {

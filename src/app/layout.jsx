@@ -1,7 +1,6 @@
 import { Inter, Space_Grotesk } from 'next/font/google'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
-import { CustomCursor } from '@/components/CustomCursor'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -21,7 +20,6 @@ export default function RootLayout({ children }) {
 			<body
 				className={`${inter.className} antialiased relative min-h-screen selection:bg-brand selection:text-white overflow-x-hidden`}
 			>
-				<CustomCursor />
 				{/* Global Animated Mesh Background */}
 				<div className='fixed inset-0 -z-50 overflow-hidden bg-[#0A0612] pointer-events-none'>
 					<div className='absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-[var(--color-brand)] rounded-full mix-blend-screen blur-[120px] opacity-[0.25] animate-pulse' />
