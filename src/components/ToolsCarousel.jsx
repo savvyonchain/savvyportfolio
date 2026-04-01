@@ -8,7 +8,8 @@ import { Zap, Grid3x3, RotateCcw } from 'lucide-react'
 export default function ToolsCarousel() {
 	const [tools, setTools] = useState([])
 	const [orbit, setOrbit] = useState({ radius: 400, cardClass: 'w-64 h-80' })
-	const [viewMode, setViewMode] = useState('carousel')
+	const [isMobile, setIsMobile] = useState(true)
+	const [viewMode, setViewMode] = useState('grid')
 
 	useEffect(() => {
 		const fetchTools = async () => {
@@ -24,6 +25,11 @@ export default function ToolsCarousel() {
 	useEffect(() => {
 		const updateOrbit = () => {
 			const w = typeof window !== 'undefined' ? window.innerWidth : 1024
+			const mobile = w < 640
+			setIsMobile(mobile)
+			if (mobile) setViewMode('grid')
+			else setViewMode('carousel')
+			
 			if (w < 480) setOrbit({ radius: 150, cardClass: 'w-44 h-56' })
 			else if (w < 640) setOrbit({ radius: 220, cardClass: 'w-52 h-64' })
 			else if (w < 768) setOrbit({ radius: 300, cardClass: 'w-56 h-72' })
@@ -55,7 +61,8 @@ export default function ToolsCarousel() {
 					</p>
 				</div>
 
-				{/* View mode toggle */}
+{/* View mode toggle - only show on sm+ */}
+			{!isMobile && (
 				<div className='flex gap-2 justify-center'>
 					<button
 						onClick={() => setViewMode('carousel')}
@@ -80,13 +87,14 @@ export default function ToolsCarousel() {
 						<Grid3x3 size={14} className='inline mr-1 sm:mr-2' />
 						<span className='hidden sm:inline'>View All</span>
 						<span className='sm:hidden'>Grid</span>
-						</button>
-					</div>
+					</button>
+				</div>
+			)}
 				</div>
 			</div>
 
-			{/* Carousel View */}
-			{viewMode === 'carousel' && (
+			{/* Carousel View - only show on sm+ */}
+			{viewMode === 'carousel' && !isMobile && (
 				<div
 					className='relative h-[320px] sm:h-[420px] md:h-[500px] w-full max-w-full flex items-center justify-center perspective-[2000px] preserve-3d overflow-x-hidden overflow-y-hidden px-4 sm:px-0'
 					style={{
@@ -145,7 +153,7 @@ export default function ToolsCarousel() {
 				</div>
 			)}
 
-			{/* Grid View */}
+			{/* Grid View - show on mobile or when selected on desktop */}
 			{viewMode === 'grid' && (
 				<div className='max-w-7xl mx-auto px-4 sm:px-6 md:px-8 mb-8 sm:mb-16'>
 					<div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-6'>
