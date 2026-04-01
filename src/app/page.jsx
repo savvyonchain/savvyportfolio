@@ -18,7 +18,7 @@ export default function Home() {
 		<div className='w-full min-w-0 overflow-x-hidden'>
 			{/* 01. Hero Section */}
 			<section className='min-h-[90vh] flex items-center justify-center overflow-x-hidden w-full relative pt-6 pb-10'>
-				<div className='grid items-center grid-cols-1 gap-10 sm:gap-16 px-4 sm:px-6 md:px-8 mx-auto max-w-7xl md:grid-cols-2'>
+				<div className='grid items-center grid-cols-1 gap-10 px-4 mx-auto sm:gap-16 sm:px-6 md:px-8 max-w-7xl md:grid-cols-2'>
 					{/* Left Content */}
 					<motion.div
 						initial={{ opacity: 0, x: -50 }}
@@ -51,8 +51,9 @@ export default function Home() {
 								className='max-w-md mb-10 text-lg font-light leading-relaxed text-gray-300'
 								style={{ fontFamily: 'var(--font-inter)' }}
 							>
-								Hi I&apos;m Savvy. I build automation systems that save you
-								time, reduce costs, and help your business grow effortlessly.
+								Hi I&apos;m Savvy. I help Web3 businesses identify their
+								highest-leverage problems and build the AI automation required
+								to solve them.
 							</p>
 
 							<div className='flex flex-wrap items-center gap-3 sm:gap-5'>
@@ -77,7 +78,7 @@ export default function Home() {
 						initial={{ opacity: 0, scale: 0.8 }}
 						animate={{ opacity: 1, scale: 1 }}
 						transition={{ duration: 1, delay: 0.2, ease: 'easeOut' }}
-						className='relative flex items-center justify-center p-2 sm:p-4 min-w-0 max-w-full'
+						className='relative flex items-center justify-center max-w-full min-w-0 p-2 sm:p-4'
 					>
 						<motion.div
 							animate={{ y: [-15, 15, -15] }}
@@ -143,7 +144,7 @@ export default function Home() {
 			</section>
 
 			{/* 02. Featured Solutions (The Evidence) */}
-			<div className='w-full bg-black/40 relative overflow-hidden py-8 sm:py-12 md:py-16'>
+			<div className='relative w-full py-8 overflow-hidden bg-black/40 sm:py-12 md:py-16'>
 				{/* Background ambient light */}
 				<div className='absolute top-0 right-0 w-[40vw] h-[40vw] bg-[var(--color-brand)]/5 blur-[150px] rounded-full -z-10' />
 				<div className='absolute bottom-0 left-0 w-[30vw] h-[30vw] bg-[var(--color-secondary)]/5 blur-[120px] rounded-full -z-10' />
@@ -151,7 +152,7 @@ export default function Home() {
 			</div>
 
 			{/* 03. Professional Summary (Introduction) */}
-			<section className='max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-8 sm:py-12 md:py-16 relative'>
+			<section className='relative px-4 py-8 mx-auto max-w-7xl sm:px-6 md:px-8 sm:py-12 md:py-16'>
 				<div className='absolute top-0 left-1/2 -translate-x-1/2 w-[60vw] h-[60vw] bg-[var(--color-brand)]/5 blur-[120px] -z-10 rounded-full animate-pulse' />
 
 				<motion.div
@@ -168,23 +169,23 @@ export default function Home() {
 						<div className='flex items-center gap-4 mb-10'>
 							<div className='w-12 h-1.5 rounded-full bg-[var(--color-brand)]' />
 							<h2
-								className='text-2xl md:text-3xl font-bold text-white tracking-tight'
+								className='text-2xl font-bold tracking-tight text-white md:text-3xl'
 								style={{ fontFamily: 'var(--font-inter)' }}
 							>
 								Professional Summary
 							</h2>
 						</div>
 
-						<div className='space-y-8 relative z-10'>
-							<p className='text-gray-300 text-lg md:text-2xl font-light leading-relaxed text-left'>
-								AI Automation Specialist with{' '}
-								<span className='text-white font-bold'>
+						<div className='relative z-10 space-y-8'>
+							<p className='text-lg font-light leading-relaxed text-left text-gray-300 md:text-2xl'>
+								AI Automation Architect with{' '}
+								<span className='font-bold text-white'>
 									4+ years of experience
 								</span>{' '}
 								building intelligent workflows and automation systems that drive
 								operational efficiency.
 							</p>
-							<p className='text-gray-400 text-base md:text-lg font-light leading-relaxed text-left'>
+							<p className='text-base font-light leading-relaxed text-left text-gray-400 md:text-lg'>
 								Expertise in designing and deploying AI-powered solutions using
 								no/low code tools to automate complex business processes. Proven
 								track record of reducing manual workload by{' '}
@@ -196,12 +197,12 @@ export default function Home() {
 							</p>
 						</div>
 
-						<div className='mt-12 pt-10 border-t border-white/5 flex gap-10 text-left'>
+						<div className='flex gap-10 pt-10 mt-12 text-left border-t border-white/5'>
 							<div>
 								<p className='text-[10px] text-gray-500 uppercase tracking-widest font-black mb-2'>
 									Current Availability
 								</p>
-								<p className='text-white text-sm font-bold flex items-center gap-2'>
+								<p className='flex items-center gap-2 text-sm font-bold text-white'>
 									<span className='w-2 h-2 rounded-full bg-emerald-500 animate-pulse' />
 									Remote / Worldwide
 								</p>
@@ -217,7 +218,7 @@ export default function Home() {
 			</section>
 
 			{/* 05. The Arsenal (The Capabilities) */}
-			<section className='py-8 sm:py-12 md:py-16 space-y-8 sm:space-y-12 md:space-y-16'>
+			<section className='py-8 space-y-8 sm:py-12 md:py-16 sm:space-y-12 md:space-y-16'>
 				<ToolsCarousel />
 				<SkillsGrid />
 			</section>
@@ -238,7 +239,7 @@ export default function Home() {
 			</section>
 
 			{/* 09. Final CTA (The Conversion) */}
-			<section className='max-w-5xl px-4 sm:px-6 md:px-8 py-12 sm:py-16 mx-auto text-center'>
+			<section className='max-w-5xl px-4 py-12 mx-auto text-center sm:px-6 md:px-8 sm:py-16'>
 				<motion.div
 					initial={{ opacity: 0, scale: 0.95 }}
 					whileInView={{ opacity: 1, scale: 1 }}
@@ -247,12 +248,12 @@ export default function Home() {
 				>
 					<div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[#9f66c2]/20 blur-[100px] -z-10' />
 					<h2
-						className='mb-6 text-2xl sm:text-4xl font-extrabold text-white md:text-6xl break-words px-1'
+						className='px-1 mb-6 text-2xl font-extrabold text-white break-words sm:text-4xl md:text-6xl'
 						style={{ fontFamily: 'var(--font-space)' }}
 					>
 						Let&apos;s Build Your Brain.
 					</h2>
-					<p className='max-w-2xl mx-auto mb-12 text-base sm:text-lg font-light text-gray-300 md:text-xl leading-relaxed px-1'>
+					<p className='max-w-2xl px-1 mx-auto mb-12 text-base font-light leading-relaxed text-gray-300 sm:text-lg md:text-xl'>
 						Start your journey toward zero-touch operations. Book your free
 						blueprint audit today.
 					</p>
