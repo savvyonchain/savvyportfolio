@@ -30,15 +30,30 @@ export default function ToolsCarousel() {
 			if (mobile) setViewMode('grid')
 			else setViewMode('carousel')
 
-			if (w < 480) setOrbit({ radius: 150, cardClass: 'w-44 h-56' })
-			else if (w < 640) setOrbit({ radius: 220, cardClass: 'w-52 h-64' })
-			else if (w < 768) setOrbit({ radius: 300, cardClass: 'w-56 h-72' })
-			else setOrbit({ radius: 400, cardClass: 'w-64 h-80' })
+			// Card size depends on viewport
+			let cardWidth, cardClass
+			if (w < 480) { cardWidth = 176; cardClass = 'w-44 h-56' }
+			else if (w < 640) { cardWidth = 208; cardClass = 'w-52 h-64' }
+			else if (w < 768) { cardWidth = 224; cardClass = 'w-56 h-72' }
+			else { cardWidth = 256; cardClass = 'w-64 h-80' }
+
+			// Dynamic radius: ensure each card has at least cardWidth + gap of space on the circumference
+			// circumference = 2 * PI * radius >= numTools * (cardWidth + gap)
+			const numTools = tools.length || 1
+			const gap = 40 // minimum px gap between cards
+			const minCircumference = numTools * (cardWidth + gap)
+			const minRadius = minCircumference / (2 * Math.PI)
+
+			// Apply a floor so small counts still look good
+			const floorRadius = w < 480 ? 150 : w < 640 ? 220 : w < 768 ? 300 : 400
+			const radius = Math.max(floorRadius, Math.ceil(minRadius))
+
+			setOrbit({ radius, cardClass })
 		}
 		updateOrbit()
 		window.addEventListener('resize', updateOrbit)
 		return () => window.removeEventListener('resize', updateOrbit)
-	}, [])
+	}, [tools.length])
 
 	if (tools.length === 0) return null
 
@@ -94,18 +109,25 @@ export default function ToolsCarousel() {
 			</div>
 
 			{/* Carousel View - only show on sm+ */}
-			{viewMode === 'carousel' && !isMobile && (
+			{viewMode === 'carousel' && !isMobile && (() => {
+				// Dynamic height: card height + enough room for the 3D ring perspective
+				const containerHeight = Math.max(420, Math.min(orbit.radius * 1.6, 800))
+				// Slower rotation for more tools: ~3.5s per tool
+				const animDuration = Math.max(14, tools.length * 3.5)
+				return (
 				<div
-					className='relative h-[320px] sm:h-[420px] md:h-[500px] w-full max-w-full flex items-center justify-center perspective-[2000px] preserve-3d overflow-x-hidden overflow-y-hidden px-4 sm:px-0'
+					className='relative w-full max-w-full flex items-center justify-center perspective-[2000px] preserve-3d overflow-x-hidden overflow-y-hidden px-4 sm:px-0'
 					style={{
+						height: `${containerHeight}px`,
 						overflowX: 'hidden',
 						overflowY: 'hidden',
-						scrollbarWidth: 'none', // Firefox
-						msOverflowStyle: 'none', // IE/Edge
+						scrollbarWidth: 'none',
+						msOverflowStyle: 'none',
 					}}
 				>
 					<div
 						className={`relative preserve-3d tools-orbit-wheel ${orbit.cardClass}`}
+						style={{ animationDuration: `${animDuration}s` }}
 					>
 						{tools.map((tool, i) => {
 							const angle = (i / tools.length) * 360
@@ -151,7 +173,8 @@ export default function ToolsCarousel() {
 						})}
 					</div>
 				</div>
-			)}
+			)
+			})()}
 
 			{/* Grid View - show on mobile or when selected on desktop */}
 			{viewMode === 'grid' && (

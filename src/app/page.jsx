@@ -151,6 +151,11 @@ export default function Home() {
 				<Projects />
 			</div>
 
+			{/* 02b. Tools Arsenal (Immediately after Solutions) */}
+			<section className='py-8 sm:py-12 md:py-16'>
+				<ToolsCarousel />
+			</section>
+
 			{/* 03. Professional Summary (Introduction) */}
 			<section className='relative px-4 py-8 mx-auto max-w-7xl sm:px-6 md:px-8 sm:py-12 md:py-16'>
 				<div className='absolute top-0 left-1/2 -translate-x-1/2 w-[60vw] h-[60vw] bg-[var(--color-brand)]/5 blur-[120px] -z-10 rounded-full animate-pulse' />
@@ -217,9 +222,8 @@ export default function Home() {
 				<ServicesSection />
 			</section>
 
-			{/* 05. The Arsenal (The Capabilities) */}
-			<section className='py-8 space-y-8 sm:py-12 md:py-16 sm:space-y-12 md:space-y-16'>
-				<ToolsCarousel />
+			{/* 05. Skills (The Capabilities) */}
+			<section className='py-8 sm:py-12 md:py-16'>
 				<SkillsGrid />
 			</section>
 

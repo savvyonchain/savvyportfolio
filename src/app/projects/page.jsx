@@ -34,6 +34,8 @@ export default function Projects() {
 	const [portfolioShowAll, setPortfolioShowAll] = useState(false)
 	const [portalReady, setPortalReady] = useState(false)
 	const [videoLoadingId, setVideoLoadingId] = useState(null)
+	const [videoPlayingId, setVideoPlayingId] = useState(null)
+	const [videoError, setVideoError] = useState(null)
 
 	useEffect(() => {
 		setPortalReady(true)
@@ -59,7 +61,13 @@ export default function Projects() {
 
 	// Lock page scroll when modal is open (incl. mobile / iOS)
 	useEffect(() => {
-		if (!selectedProject) return
+		if (!selectedProject) {
+			// Reset video state when modal closes
+			setVideoPlayingId(null)
+			setVideoLoadingId(null)
+			setVideoError(null)
+			return
+		}
 		scrollYRef.current = window.scrollY
 		const html = document.documentElement
 		const body = document.body
@@ -666,24 +674,27 @@ export default function Projects() {
 																	Launch Full Walkthrough
 																</p>
 															</div>
-														) : (
+														) : videoPlayingId === selectedProject.id ? (
 															<>
 																<video
 																	key={selectedProject.id}
 																	controls
+																	autoPlay
 																	playsInline
-																	width='1280'
-																	height='720'
-																	preload='metadata'
+																	preload='auto'
 																	className='w-full h-full object-contain'
 																	poster={
 																		selectedProject.screenshot_url || undefined
 																	}
-																	onLoadStart={() =>
-																		setVideoLoadingId(selectedProject.id)
-																	}
 																	onCanPlay={() => setVideoLoadingId(null)}
 																	onLoadedData={() => setVideoLoadingId(null)}
+																	onWaiting={() => setVideoLoadingId(selectedProject.id)}
+																	onPlaying={() => setVideoLoadingId(null)}
+																	onError={() => {
+																		setVideoLoadingId(null)
+																		setVideoError(selectedProject.id)
+																		setVideoPlayingId(null)
+																	}}
 																>
 																	<source
 																		src={selectedProject.video_url}
@@ -692,24 +703,76 @@ export default function Projects() {
 																	Your browser does not support the video tag.
 																</video>
 																{videoLoadingId === selectedProject.id && (
-																	<div className='absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm'>
+																	<div className='absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm pointer-events-none'>
 																		<div className='flex flex-col items-center gap-4'>
 																			<motion.div
 																				animate={{ rotate: 360 }}
 																				transition={{
-																					duration: 2,
+																					duration: 1.5,
 																					repeat: Infinity,
 																					ease: 'linear',
 																				}}
 																				className='w-10 h-10 border-2 border-white/20 border-t-[var(--color-brand)] rounded-full'
 																			/>
 																			<p className='text-xs text-white/60 font-light tracking-widest'>
-																				Loading Video...
+																				Buffering...
 																			</p>
 																		</div>
 																	</div>
 																)}
 															</>
+														) : (
+															<div
+																className='w-full h-full flex items-center justify-center group cursor-pointer relative'
+																onClick={() => {
+																	setVideoError(null)
+																	setVideoLoadingId(selectedProject.id)
+																	setVideoPlayingId(selectedProject.id)
+																}}
+															>
+																{/* Poster / thumbnail background */}
+																{selectedProject.screenshot_url && (
+																	<Image
+																		src={selectedProject.screenshot_url}
+																		alt='Video thumbnail'
+																		fill
+																		unoptimized
+																		className='object-cover opacity-40 group-hover:opacity-50 transition-opacity duration-500'
+																	/>
+																)}
+																<div className='absolute inset-0 bg-gradient-to-tr from-black/60 via-black/30 to-transparent' />
+
+																{videoError === selectedProject.id ? (
+																	<div className='relative z-10 flex flex-col items-center gap-4'>
+																		<div className='w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-red-500/10 backdrop-blur-xl border border-red-500/20 flex items-center justify-center'>
+																			<X size={28} className='text-red-400' />
+																		</div>
+																		<p className='text-sm font-bold text-white/70 tracking-wider'>
+																			Failed to load video
+																		</p>
+																		<button
+																			onClick={(e) => {
+																				e.stopPropagation()
+																				setVideoError(null)
+																				setVideoLoadingId(selectedProject.id)
+																				setVideoPlayingId(selectedProject.id)
+																			}}
+																			className='px-6 py-2.5 bg-[var(--color-brand)] text-white text-xs font-bold uppercase tracking-widest rounded-full hover:scale-105 transition-all flex items-center gap-2'
+																		>
+																			<RefreshCw size={14} /> Retry
+																		</button>
+																	</div>
+																) : (
+																	<div className='relative z-10 flex flex-col items-center gap-4'>
+																		<div className='w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 flex items-center justify-center group-hover:bg-[var(--color-brand)] group-hover:border-[var(--color-brand)] transition-all duration-300 scale-90 group-hover:scale-100 shadow-[0_0_40px_rgba(0,0,0,0.5)]'>
+																			<div className='w-0 h-0 border-t-[12px] border-t-transparent border-l-[22px] border-l-white border-b-[12px] border-b-transparent ml-2' />
+																		</div>
+																		<p className='text-xs font-bold text-white/40 tracking-widest uppercase'>
+																			Play Walkthrough
+																		</p>
+																	</div>
+																)}
+															</div>
 														)
 													) : (
 														<div className='w-full h-full flex items-center justify-center text-gray-700 italic'>
