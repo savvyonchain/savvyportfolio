@@ -18,13 +18,13 @@ export default function ServicesSection() {
 	if (services.length === 0) return null
 
 	return (
-		<section className='w-full py-12 sm:py-16 md:py-20 bg-black/40 relative overflow-hidden'>
+		<section className='w-full pt-6 pb-8 sm:pb-10 md:pb-12 bg-black/40 relative overflow-hidden'>
 			{/* Ambient Glows for Section Depth */}
 			<div className='absolute top-0 right-0 w-[40vw] h-[40vw] bg-[var(--color-brand)]/5 blur-[150px] rounded-full -z-10' />
 			<div className='absolute bottom-0 left-0 w-[30vw] h-[30vw] bg-[var(--color-secondary)]/5 blur-[120px] rounded-full -z-10' />
 
 			<div className='max-w-7xl mx-auto px-4 sm:px-6 md:px-8'>
-				<div className='flex items-center gap-4 mb-20'>
+				<div className='flex items-center gap-4 mb-12'>
 					<div className='w-12 h-1.5 rounded-full bg-[var(--color-brand)]' />
 					<h2
 						className='text-2xl sm:text-3xl md:text-5xl font-black text-white break-words'

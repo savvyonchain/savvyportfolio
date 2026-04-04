@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
+import Link from 'next/link'
 
 export default function ProcessSection() {
 	const [steps, setSteps] = useState([])
@@ -18,7 +19,7 @@ export default function ProcessSection() {
 	if (steps.length === 0) return null
 
 	return (
-		<section className='max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-20 relative'>
+		<section className='max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-8 sm:py-12 relative'>
 			{/* Ambient Section Glow */}
 			<div className='absolute -top-24 -left-24 w-96 h-96 bg-[var(--color-brand)]/10 blur-[120px] rounded-full -z-10 animate-pulse' />
 
@@ -80,13 +81,13 @@ export default function ProcessSection() {
 								Transform your <br /><span className='text-gray-400'>operations today.</span>
 							</p>
 						</div>
-						<button 
-							onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-							className='group relative w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-5 bg-[var(--color-brand)] text-white font-black rounded-2xl hover:scale-105 transition-all shadow-[0_0_40px_rgba(108,59,137,0.4)] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-[10px] text-center'
+						<Link
+							href='/contact'
+							className='group relative w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-5 bg-[var(--color-brand)] text-white font-black rounded-2xl hover:scale-105 transition-all shadow-[0_0_40px_rgba(108,59,137,0.4)] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-[10px] text-center inline-block'
 						>
 							<span className='relative z-10'>Start Collaboration</span>
 							<div className='absolute inset-0 rounded-2xl bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity' />
-						</button>
+						</Link>
 					</div>
 				</div>
 			</div>

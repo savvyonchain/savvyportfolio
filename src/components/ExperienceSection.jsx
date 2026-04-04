@@ -18,8 +18,8 @@ export default function ExperienceSection() {
 	if (experience.length === 0) return null
 
 	return (
-		<section className='max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-20'>
-			<div className='flex items-center gap-4 mb-16'>
+		<section className='max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8 sm:py-12'>
+			<div className='flex items-center gap-4 mb-10'>
 				<div className='w-12 h-1.5 rounded-full bg-[var(--color-brand)]' />
 				<h2 className='text-3xl md:text-4xl font-black text-white' style={{ fontFamily: 'var(--font-space)' }}>
 					Experience

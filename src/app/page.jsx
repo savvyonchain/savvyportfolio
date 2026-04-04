@@ -5,7 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import homepagePhoto from '@/assets/homepagephoto.jpg'
 import { Zap, Bot, CheckCircle } from 'lucide-react'
-import Projects from './projects/page'
+
 import ServicesSection from '@/components/ServicesSection'
 import ToolsCarousel from '@/components/ToolsCarousel'
 import SkillsGrid from '@/components/SkillsGrid'
@@ -17,7 +17,7 @@ export default function Home() {
 	return (
 		<div className='w-full min-w-0 overflow-x-hidden'>
 			{/* 01. Hero Section */}
-			<section className='min-h-[90vh] flex items-center justify-center overflow-x-hidden w-full relative pt-6 pb-10'>
+			<section className='min-h-[80vh] flex items-center justify-center overflow-x-hidden w-full relative pt-6 pb-6'>
 				<div className='grid items-center grid-cols-1 gap-10 px-4 mx-auto sm:gap-16 sm:px-6 md:px-8 max-w-7xl md:grid-cols-2'>
 					{/* Left Content */}
 					<motion.div
@@ -51,7 +51,7 @@ export default function Home() {
 								className='max-w-md mb-10 text-lg font-light leading-relaxed text-gray-300'
 								style={{ fontFamily: 'var(--font-inter)' }}
 							>
-								Hi I&apos;m Savvy. I help Web3 businesses identify their
+								Hi I&apos;m Savvy. I help businesses identify their
 								highest-leverage problems and build the AI automation required
 								to solve them.
 							</p>
@@ -143,21 +143,8 @@ export default function Home() {
 				</div>
 			</section>
 
-			{/* 02. Featured Solutions (The Evidence) */}
-			<div className='relative w-full py-8 overflow-hidden bg-black/40 sm:py-12 md:py-16'>
-				{/* Background ambient light */}
-				<div className='absolute top-0 right-0 w-[40vw] h-[40vw] bg-[var(--color-brand)]/5 blur-[150px] rounded-full -z-10' />
-				<div className='absolute bottom-0 left-0 w-[30vw] h-[30vw] bg-[var(--color-secondary)]/5 blur-[120px] rounded-full -z-10' />
-				<Projects />
-			</div>
-
-			{/* 02b. Tools Arsenal (Immediately after Solutions) */}
-			<section className='py-8 sm:py-12 md:py-16'>
-				<ToolsCarousel />
-			</section>
-
-			{/* 03. Professional Summary (Introduction) */}
-			<section className='relative px-4 py-8 mx-auto max-w-7xl sm:px-6 md:px-8 sm:py-12 md:py-16'>
+			{/* 02. Professional Summary (Introduction) */}
+			<section className='relative px-4 py-6 mx-auto max-w-7xl sm:px-6 md:px-8 sm:py-8 md:py-10'>
 				<div className='absolute top-0 left-1/2 -translate-x-1/2 w-[60vw] h-[60vw] bg-[var(--color-brand)]/5 blur-[120px] -z-10 rounded-full animate-pulse' />
 
 				<motion.div
@@ -183,22 +170,21 @@ export default function Home() {
 
 						<div className='relative z-10 space-y-8'>
 							<p className='text-lg font-light leading-relaxed text-left text-gray-300 md:text-2xl'>
-								AI Automation Architect with{' '}
+								AI Automation Architect helping businesses fix{' '}
 								<span className='font-bold text-white'>
-									4+ years of experience
+									operational bottlenecks
 								</span>{' '}
-								building intelligent workflows and automation systems that drive
-								operational efficiency.
+								and building automated systems that support growth.
 							</p>
 							<p className='text-base font-light leading-relaxed text-left text-gray-400 md:text-lg'>
-								Expertise in designing and deploying AI-powered solutions using
-								no/low code tools to automate complex business processes. Proven
-								track record of reducing manual workload by{' '}
+								Skilled in leveraging no-code and low-code platforms to design
+								scalable, maintainable solutions that integrate seamlessly with
+								existing workflows. I step in to map how the business moves from
+								marketing to sales to onboarding to delivery and retention, then
+								identify where{' '}
 								<span className='text-[var(--color-brand-light)] font-bold'>
-									15-20 hours weekly
+									revenue slows down.
 								</span>{' '}
-								while eliminating operational costs through smart automation and
-								self-hosted solutions.
 							</p>
 						</div>
 
@@ -217,33 +203,26 @@ export default function Home() {
 				</motion.div>
 			</section>
 
+			{/* 03. Tools Arsenal */}
+			<ToolsCarousel />
+
 			{/* 04. Services (The Offer) */}
-			<section className='py-8 sm:py-12 md:py-16 bg-white/[0.01]'>
-				<ServicesSection />
-			</section>
+			<ServicesSection />
 
 			{/* 05. Skills (The Capabilities) */}
-			<section className='py-8 sm:py-12 md:py-16'>
-				<SkillsGrid />
-			</section>
+			<SkillsGrid />
 
 			{/* 06. Experience (The Authority) */}
-			<section className='py-8 sm:py-12 md:py-16'>
-				<ExperienceSection />
-			</section>
+			<ExperienceSection />
 
 			{/* 07. My Process (The Methodology) */}
-			<section className='py-8 sm:py-12 md:py-16 bg-white/[0.01]'>
-				<ProcessSection />
-			</section>
+			<ProcessSection />
 
 			{/* 08. Testimonials (The Social Proof) */}
-			<section className='py-8 sm:py-12 md:py-16'>
-				<TestimonialsSection />
-			</section>
+			<TestimonialsSection />
 
 			{/* 09. Final CTA (The Conversion) */}
-			<section className='max-w-5xl px-4 py-12 mx-auto text-center sm:px-6 md:px-8 sm:py-16'>
+			<section className='max-w-5xl px-4 py-8 mx-auto text-center sm:px-6 md:px-8 sm:py-12'>
 				<motion.div
 					initial={{ opacity: 0, scale: 0.95 }}
 					whileInView={{ opacity: 1, scale: 1 }}
@@ -255,11 +234,10 @@ export default function Home() {
 						className='px-1 mb-6 text-2xl font-extrabold text-white break-words sm:text-4xl md:text-6xl'
 						style={{ fontFamily: 'var(--font-space)' }}
 					>
-						Let&apos;s Build Your Brain.
+						Ready to stop running your business manually?
 					</h2>
 					<p className='max-w-2xl px-1 mx-auto mb-12 text-base font-light leading-relaxed text-gray-300 sm:text-lg md:text-xl'>
-						Start your journey toward zero-touch operations. Book your free
-						blueprint audit today.
+						Book a free audit and let's map out what to build.
 					</p>
 					<Link
 						href='/contact'

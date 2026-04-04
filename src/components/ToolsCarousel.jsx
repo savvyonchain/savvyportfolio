@@ -1,262 +1,319 @@
 'use client'
 
-import { motion } from 'framer-motion'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { supabase } from '@/lib/supabase'
-import { Zap, Grid3x3, RotateCcw } from 'lucide-react'
+import { Zap, ChevronLeft, ChevronRight, Grid3x3, RotateCcw } from 'lucide-react'
+
+const SPEED = 0.38 // cards per second (continuous)
+
+// Smoothly interpolate cover-flow position from a float offset
+function getProps(offset) {
+  const abs = Math.abs(offset)
+  if (abs > 2.55) return null
+  const sign = offset < 0 ? -1 : 1
+  let x, ry, scale, opacity
+  if (abs <= 1) {
+    x       = sign * 215 * abs
+    ry      = sign * 43  * abs
+    scale   = 1    - 0.17 * abs
+    opacity = 1    - 0.28 * abs
+  } else {
+    const t = abs - 1
+    x       = sign * (215 + 155 * t)
+    ry      = sign * (43  + 14  * t)
+    scale   = 0.83 - 0.17 * t
+    opacity = 0.72 - 0.27 * t
+  }
+  return { x, ry, scale, opacity, zIndex: Math.max(1, Math.round(20 - abs * 5)) }
+}
 
 export default function ToolsCarousel() {
-	const [tools, setTools] = useState([])
-	const [orbit, setOrbit] = useState({ radius: 400, cardClass: 'w-64 h-80' })
-	const [isMobile, setIsMobile] = useState(true)
-	const [viewMode, setViewMode] = useState('grid')
+  const [tools, setTools]     = useState([])
+  const [progress, setProgress] = useState(0)   // float, drives positions
+  const [view, setView]       = useState('carousel')
 
-	useEffect(() => {
-		const fetchTools = async () => {
-			const { data } = await supabase
-				.from('tools')
-				.select('*')
-				.order('order_index')
-			setTools(data || [])
-		}
-		fetchTools()
-	}, [])
+  const progressRef  = useRef(0)
+  const pausedRef    = useRef(false)
+  const lenRef       = useRef(0)
+  const lastTimeRef  = useRef(null)
+  const rafRef       = useRef(null)
+  const viewRef      = useRef('carousel')
 
-	useEffect(() => {
-		const updateOrbit = () => {
-			const w = typeof window !== 'undefined' ? window.innerWidth : 1024
-			const mobile = w < 640
-			setIsMobile(mobile)
-			if (mobile) setViewMode('grid')
-			else setViewMode('carousel')
+  useEffect(() => { viewRef.current = view }, [view])
+  useEffect(() => { lenRef.current = tools.length }, [tools.length])
 
-			// Card size depends on viewport
-			let cardWidth, cardClass
-			if (w < 480) { cardWidth = 176; cardClass = 'w-44 h-56' }
-			else if (w < 640) { cardWidth = 208; cardClass = 'w-52 h-64' }
-			else if (w < 768) { cardWidth = 224; cardClass = 'w-56 h-72' }
-			else { cardWidth = 256; cardClass = 'w-64 h-80' }
+  useEffect(() => {
+    supabase.from('tools').select('*').order('order_index').then(({ data }) => {
+      setTools(data || [])
+    })
+  }, [])
 
-			// Dynamic radius: ensure each card has at least cardWidth + gap of space on the circumference
-			// circumference = 2 * PI * radius >= numTools * (cardWidth + gap)
-			const numTools = tools.length || 1
-			const gap = 40 // minimum px gap between cards
-			const minCircumference = numTools * (cardWidth + gap)
-			const minRadius = minCircumference / (2 * Math.PI)
+  // RAF-driven continuous rotation
+  useEffect(() => {
+    if (tools.length === 0) return
 
-			// Apply a floor so small counts still look good
-			const floorRadius = w < 480 ? 150 : w < 640 ? 220 : w < 768 ? 300 : 400
-			const radius = Math.max(floorRadius, Math.ceil(minRadius))
+    const loop = (ts) => {
+      rafRef.current = requestAnimationFrame(loop)
+      if (viewRef.current !== 'carousel') { lastTimeRef.current = null; return }
+      if (lastTimeRef.current !== null && !pausedRef.current) {
+        const dt = Math.min((ts - lastTimeRef.current) / 1000, 0.1)
+        const n  = lenRef.current
+        progressRef.current = (progressRef.current + SPEED * dt + n) % n
+        setProgress(progressRef.current)
+      }
+      lastTimeRef.current = ts
+    }
 
-			setOrbit({ radius, cardClass })
-		}
-		updateOrbit()
-		window.addEventListener('resize', updateOrbit)
-		return () => window.removeEventListener('resize', updateOrbit)
-	}, [tools.length])
+    rafRef.current = requestAnimationFrame(loop)
+    return () => cancelAnimationFrame(rafRef.current)
+  }, [tools.length])
 
-	if (tools.length === 0) return null
+  // Snap to an index, pause briefly then resume
+  const jumpTo = useCallback((i) => {
+    pausedRef.current = true
+    progressRef.current = i
+    setProgress(i)
+    setTimeout(() => { pausedRef.current = false }, 2800)
+  }, [])
 
-	return (
-		<section className='w-full pt-20 pb-0 overflow-hidden bg-black/40 relative'>
-			{/* Background ambient light */}
-			<div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[var(--color-brand)]/5 blur-[120px] rounded-full -z-10' />
+  const prev = useCallback(() => {
+    const n = lenRef.current; if (!n) return
+    jumpTo(((Math.round(progressRef.current) - 1) + n) % n)
+  }, [jumpTo])
 
-			<div className='max-w-7xl mx-auto px-4 sm:px-6 md:px-8 mb-8 sm:mb-24'>
-				<div className='flex flex-col gap-4'>
-					<div className='text-center'>
-						<h2
-							className='text-3xl sm:text-4xl md:text-6xl font-black text-white mb-2 uppercase tracking-tighter'
-							style={{ fontFamily: 'var(--font-space)' }}
-						>
-							Tools
-						</h2>
-						<p className='text-gray-500 font-light text-base sm:text-lg tracking-widest uppercase'>
-							The engines behind the automation
-						</p>
-					</div>
+  const next = useCallback(() => {
+    const n = lenRef.current; if (!n) return
+    jumpTo((Math.round(progressRef.current) + 1) % n)
+  }, [jumpTo])
 
-					{/* View mode toggle - only show on sm+ */}
-					{!isMobile && (
-						<div className='flex gap-2 justify-center'>
-							<button
-								onClick={() => setViewMode('carousel')}
-								className={`px-3 sm:px-4 py-2 rounded-lg font-semibold uppercase tracking-wider text-xs sm:text-sm transition-all whitespace-nowrap ${
-									viewMode === 'carousel'
-										? 'bg-[var(--color-brand)] text-white shadow-[0_0_20px_rgba(108,59,137,0.6)]'
-										: 'bg-white/10 text-gray-300 hover:bg-white/20'
-								}`}
-							>
-								<RotateCcw size={14} className='inline mr-1 sm:mr-2' />
-								<span className='hidden sm:inline'>Carousel</span>
-								<span className='sm:hidden'>Rotate</span>
-							</button>
-							<button
-								onClick={() => setViewMode('grid')}
-								className={`px-3 sm:px-4 py-2 rounded-lg font-semibold uppercase tracking-wider text-xs sm:text-sm transition-all whitespace-nowrap ${
-									viewMode === 'grid'
-										? 'bg-[var(--color-brand)] text-white shadow-[0_0_20px_rgba(108,59,137,0.6)]'
-										: 'bg-white/10 text-gray-300 hover:bg-white/20'
-								}`}
-							>
-								<Grid3x3 size={14} className='inline mr-1 sm:mr-2' />
-								<span className='hidden sm:inline'>View All</span>
-								<span className='sm:hidden'>Grid</span>
-							</button>
-						</div>
-					)}
-				</div>
-			</div>
+  if (tools.length === 0) return null
 
-			{/* Carousel View - only show on sm+ */}
-			{viewMode === 'carousel' && !isMobile && (() => {
-				// Dynamic height: card height + enough room for the 3D ring perspective
-				const containerHeight = Math.max(420, Math.min(orbit.radius * 1.6, 800))
-				// Slower rotation for more tools: ~3.5s per tool
-				const animDuration = Math.max(14, tools.length * 3.5)
-				return (
-				<div
-					className='relative w-full max-w-full flex items-center justify-center perspective-[2000px] preserve-3d overflow-x-hidden overflow-y-hidden px-4 sm:px-0'
-					style={{
-						height: `${containerHeight}px`,
-						overflowX: 'hidden',
-						overflowY: 'hidden',
-						scrollbarWidth: 'none',
-						msOverflowStyle: 'none',
-					}}
-				>
-					<div
-						className={`relative preserve-3d tools-orbit-wheel ${orbit.cardClass}`}
-						style={{ animationDuration: `${animDuration}s` }}
-					>
-						{tools.map((tool, i) => {
-							const angle = (i / tools.length) * 360
-							const radius = orbit.radius
+  const activeIdx = Math.round(progress) % tools.length
 
-							return (
-								<motion.div
-									key={tool.id}
-									className='absolute inset-0 rounded-[1.75rem] sm:rounded-[2.5rem] bg-[#111111]/90 backdrop-blur-2xl border border-white/10 p-4 sm:p-8 flex flex-col items-center justify-center gap-4 sm:gap-6 shadow-[0_0_50px_rgba(0,0,0,0.5)] backface-hidden group hover:border-[var(--color-brand)]/50 transition-colors'
-									style={{
-										transform: `rotateY(${angle}deg) translateZ(${radius}px)`,
-									}}
-								>
-									{/* Reflection effect at bottom */}
-									<div className='absolute -bottom-40 left-0 right-0 h-40 bg-gradient-to-t from-transparent via-white/5 to-transparent opacity-20 pointer-events-none transform -scale-y-100 blur-sm' />
+  return (
+    <section className='w-full py-10 overflow-hidden bg-black/40 relative'>
 
-									<div className='w-20 h-20 sm:w-28 sm:h-28 relative z-10 p-3 sm:p-4 bg-white/5 rounded-2xl sm:rounded-3xl border border-white/5 group-hover:bg-white/10 transition-all'>
-										{tool.image_url ? (
-											<img
-												src={tool.image_url}
-												alt={tool.name}
-												className='w-full h-full object-contain filter drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]'
-											/>
-										) : (
-											<Zap
-												size={64}
-												className='text-[var(--color-brand-light)] w-full h-full'
-											/>
-										)}
-									</div>
+      {/* Ambient glow */}
+      <div className='absolute inset-0 pointer-events-none flex items-center justify-center'>
+        <div
+          className='w-[700px] h-[500px] rounded-full blur-[140px] opacity-25'
+          style={{ background: 'radial-gradient(ellipse, var(--color-brand) 0%, var(--color-secondary) 60%, transparent 100%)' }}
+        />
+      </div>
 
-									<div className='text-center relative z-10 px-1 min-w-0'>
-										<h3 className='text-xs sm:text-lg md:text-xl font-black text-white tracking-wider sm:tracking-widest uppercase mb-1 break-words max-w-[10rem] sm:max-w-none mx-auto'>
-											{tool.name}
-										</h3>
-										<div className='w-10 h-1 bg-[var(--color-brand)] mx-auto rounded-full opacity-0 group-hover:opacity-100 transition-all' />
-									</div>
+      {/* Header + toggle */}
+      <div className='relative z-10 flex flex-col items-center gap-3 mb-6 px-4'>
+        <div className='text-center'>
+          <h2
+            className='text-3xl sm:text-4xl md:text-6xl font-black text-white uppercase tracking-tighter'
+            style={{ fontFamily: 'var(--font-space)' }}
+          >
+            Tools
+          </h2>
+          <p className='text-gray-500 font-light text-sm sm:text-base tracking-widest uppercase mt-1'>
+            The engines behind the automation
+          </p>
+        </div>
 
-									{/* Inner Glow */}
-									<div className='absolute inset-0 bg-gradient-to-br from-[var(--color-brand)]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-[2.5rem]' />
-								</motion.div>
-							)
-						})}
-					</div>
-				</div>
-			)
-			})()}
+        <div className='flex gap-2'>
+          {[
+            { key: 'carousel', label: 'Carousel', Icon: RotateCcw },
+            { key: 'grid',     label: 'View All', Icon: Grid3x3  },
+          ].map(({ key, label, Icon }) => (
+            <button
+              key={key}
+              onClick={() => setView(key)}
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all ${
+                view === key
+                  ? 'bg-[var(--color-brand)] text-white shadow-[0_0_18px_rgba(108,59,137,0.6)]'
+                  : 'bg-white/10 text-gray-400 hover:bg-white/20 hover:text-white'
+              }`}
+            >
+              <Icon size={13} /> {label}
+            </button>
+          ))}
+        </div>
+      </div>
 
-			{/* Grid View - show on mobile or when selected on desktop */}
-			{viewMode === 'grid' && (
-				<div className='max-w-7xl mx-auto px-4 sm:px-6 md:px-8 mb-8 sm:mb-16'>
-					<div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-6'>
-						{tools.map((tool) => (
-							<motion.div
-								key={tool.id}
-								initial={{ opacity: 0, y: 20 }}
-								animate={{ opacity: 1, y: 0 }}
-								transition={{ duration: 0.3 }}
-								className='rounded-xl sm:rounded-2xl bg-[#111111]/90 backdrop-blur-2xl border border-white/10 p-4 sm:p-6 flex flex-col items-center justify-center gap-3 shadow-[0_0_50px_rgba(0,0,0,0.5)] group hover:border-[var(--color-brand)]/50 transition-all hover:shadow-[0_0_30px_rgba(108,59,137,0.4)]'
-							>
-								<div className='w-16 h-16 sm:w-20 sm:h-20 relative p-2 sm:p-3 bg-white/5 rounded-lg sm:rounded-xl border border-white/5 group-hover:bg-white/10 transition-all'>
-									{tool.image_url ? (
-										<img
-											src={tool.image_url}
-											alt={tool.name}
-											className='w-full h-full object-contain filter drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]'
-										/>
-									) : (
-										<Zap
-											size={48}
-											className='text-[var(--color-brand-light)] w-full h-full'
-										/>
-									)}
-								</div>
+      <AnimatePresence mode='wait'>
 
-								<div className='text-center'>
-									<h3 className='text-xs sm:text-sm font-black text-white tracking-wider uppercase mb-2 break-words line-clamp-2'>
-										{tool.name}
-									</h3>
-									<div className='w-6 h-1 bg-[var(--color-brand)] mx-auto rounded-full opacity-0 group-hover:opacity-100 transition-all' />
-								</div>
+        {/* ── CONTINUOUS ROTATING CAROUSEL ── */}
+        {view === 'carousel' && (
+          <motion.div
+            key='carousel'
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {/* Stage */}
+            <div
+              className='relative flex items-center justify-center select-none'
+              style={{ height: '300px', perspective: '1100px' }}
+              onMouseEnter={() => { pausedRef.current = true }}
+              onMouseLeave={() => { pausedRef.current = false }}
+            >
+              {tools.map((tool, i) => {
+                let offset = i - progress
+                const n = tools.length
+                // Shortest-path wrap-around
+                while (offset >  n / 2) offset -= n
+                while (offset < -n / 2) offset += n
 
-								{/* Inner Glow */}
-								<div className='absolute inset-0 bg-gradient-to-br from-[var(--color-brand)]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-xl sm:rounded-2xl' />
-							</motion.div>
-						))}
-					</div>
-				</div>
-			)}
+                const p = getProps(offset)
+                if (!p) return null
 
-			{/* Hide scrollbar only for this section */}
-			<style jsx>{`
-				.relative.h-\[min\(90vw,
-				420px\)\].sm\:h-\[460px\].md\:h-\[500px\]::-webkit-scrollbar {
-					display: none;
-					height: 0;
-					width: 0;
-				}
-				.relative.h-\[min\(90vw,
-				420px\)\].sm\:h-\[460px\].md\:h-\[500px\] {
-					scrollbar-width: none;
-					-ms-overflow-style: none;
-				}
-			`}</style>
+                const isActive = i === activeIdx
 
-			<style jsx>{`
-				.preserve-3d {
-					transform-style: preserve-3d;
-				}
-				.perspective-2000 {
-					perspective: 2000px;
-				}
-				.backface-hidden {
-					backface-visibility: hidden;
-				}
-			`}</style>
+                return (
+                  <div
+                    key={tool.id}
+                    onClick={() => { if (!isActive) jumpTo(i) }}
+                    className={`absolute ${isActive ? 'cursor-default' : 'cursor-pointer'}`}
+                    style={{
+                      zIndex: p.zIndex,
+                      opacity: p.opacity,
+                      transform: `translateX(${p.x}px) rotateY(${p.ry}deg) scale(${p.scale})`,
+                      transformStyle: 'preserve-3d',
+                    }}
+                  >
+                    <div
+                      className={`relative overflow-hidden rounded-[22px] ${
+                        isActive
+                          ? 'shadow-[0_0_50px_rgba(108,59,137,0.65),0_16px_50px_rgba(0,0,0,0.8)] border border-[var(--color-brand)]/50'
+                          : 'shadow-[0_8px_30px_rgba(0,0,0,0.5)] border border-white/10'
+                      }`}
+                      style={{ width: '160px', height: '210px' }}
+                    >
+                      {/* Logo / image area */}
+                      <div className='w-full h-[68%] bg-[#0c0c0c] flex items-center justify-center p-5'>
+                        {tool.image_url ? (
+                          <img
+                            src={tool.image_url}
+                            alt={tool.name}
+                            className={`w-full h-full object-contain transition-none ${
+                              isActive
+                                ? 'filter drop-shadow-[0_0_18px_rgba(255,255,255,0.45)]'
+                                : 'filter grayscale opacity-55'
+                            }`}
+                          />
+                        ) : (
+                          <Zap
+                            size={52}
+                            className={isActive ? 'text-[var(--color-brand-light)]' : 'text-gray-600'}
+                          />
+                        )}
+                      </div>
 
-			<style jsx global>{`
-				.hide-scrollbar {
-					overflow-x: hidden !important;
-					scrollbar-width: none !important;
-					-ms-overflow-style: none !important;
-				}
-				.hide-scrollbar::-webkit-scrollbar {
-					display: none !important;
-					width: 0 !important;
-					height: 0 !important;
-				}
-			`}</style>
-		</section>
-	)
+                      {/* Name bar */}
+                      <div className={`absolute bottom-0 left-0 right-0 px-3 py-2.5 backdrop-blur-md ${isActive ? 'bg-black/70' : 'bg-black/50'}`}>
+                        <p
+                          className={`font-black uppercase tracking-wide truncate leading-tight ${isActive ? 'text-white text-sm' : 'text-gray-400 text-xs'}`}
+                          style={{ fontFamily: 'var(--font-space)' }}
+                        >
+                          {tool.name}
+                        </p>
+                        {isActive && tool.category && (
+                          <p className='text-[var(--color-brand-light)] text-[10px] font-light uppercase tracking-widest truncate mt-0.5'>
+                            {tool.category}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Active gradient overlay */}
+                      {isActive && (
+                        <div className='absolute inset-0 bg-gradient-to-t from-[var(--color-brand)]/15 via-transparent to-white/5 pointer-events-none rounded-[22px]' />
+                      )}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+
+            {/* Nav: arrows + dots */}
+            <div className='relative z-10 flex items-center justify-center gap-4 mt-5'>
+              <button
+                onClick={prev}
+                className='p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all hover:scale-110 border border-white/10'
+              >
+                <ChevronLeft size={18} />
+              </button>
+
+              <div className='flex items-center gap-1.5'>
+                {tools.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => jumpTo(i)}
+                    className={`rounded-full transition-all duration-300 ${
+                      i === activeIdx
+                        ? 'w-5 h-2 bg-[var(--color-brand)] shadow-[0_0_8px_var(--color-brand)]'
+                        : 'w-2 h-2 bg-white/25 hover:bg-white/50'
+                    }`}
+                  />
+                ))}
+              </div>
+
+              <button
+                onClick={next}
+                className='p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all hover:scale-110 border border-white/10'
+              >
+                <ChevronRight size={18} />
+              </button>
+            </div>
+          </motion.div>
+        )}
+
+        {/* ── GRID / VIEW ALL ── */}
+        {view === 'grid' && (
+          <motion.div
+            key='grid'
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 14 }}
+            transition={{ duration: 0.3 }}
+            className='max-w-7xl mx-auto px-4 sm:px-6 md:px-8 pb-4'
+          >
+            <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4'>
+              {tools.map((tool, i) => (
+                <motion.div
+                  key={tool.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.06, duration: 0.4 }}
+                  className='rounded-xl sm:rounded-2xl bg-[#111111]/90 border border-white/10 p-4 sm:p-5 flex flex-col items-center justify-center gap-3 group hover:border-[var(--color-brand)]/50 transition-colors hover:shadow-[0_0_25px_rgba(108,59,137,0.35)] relative overflow-hidden'
+                >
+                  {/* Floating bob on the icon */}
+                  <motion.div
+                    animate={{ y: [0, -7, 0] }}
+                    transition={{
+                      duration: 2.4 + (i % 5) * 0.35,
+                      repeat: Infinity,
+                      ease: 'easeInOut',
+                      delay: (i % 7) * 0.3,
+                    }}
+                    className='w-14 h-14 sm:w-16 sm:h-16 p-2 bg-white/5 rounded-xl border border-white/5 group-hover:bg-white/10 transition-all'
+                  >
+                    {tool.image_url ? (
+                      <img src={tool.image_url} alt={tool.name} className='w-full h-full object-contain' />
+                    ) : (
+                      <Zap size={36} className='text-[var(--color-brand-light)] w-full h-full' />
+                    )}
+                  </motion.div>
+                  <p
+                    className='text-xs font-black text-white tracking-wider uppercase text-center break-words line-clamp-2'
+                    style={{ fontFamily: 'var(--font-space)' }}
+                  >
+                    {tool.name}
+                  </p>
+                  <div className='absolute inset-0 bg-gradient-to-br from-[var(--color-brand)]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-xl sm:rounded-2xl pointer-events-none' />
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
+      </AnimatePresence>
+    </section>
+  )
 }

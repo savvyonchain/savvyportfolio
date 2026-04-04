@@ -18,9 +18,9 @@ export default function SkillsGrid() {
 	if (skills.length === 0) return null
 
 	return (
-		<section className='w-full pt-10 pb-20 bg-black/40'>
+		<section className='w-full pt-6 pb-10 bg-black/40'>
 			<div className='max-w-7xl mx-auto px-4 sm:px-6 md:px-8'>
-				<div className='text-center mb-16'>
+				<div className='text-center mb-10'>
 					<h2 className='text-4xl md:text-5xl font-extrabold text-white mb-4' style={{ fontFamily: 'var(--font-space)' }}>
 						My <span className='text-[var(--color-secondary)]'>Skills</span>
 					</h2>

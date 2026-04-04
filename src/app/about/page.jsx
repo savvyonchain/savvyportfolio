@@ -16,12 +16,12 @@ export default function About() {
 	return (
 		<div className='relative w-full pb-20 overflow-x-hidden sm:pb-32'>
 			{/* ✦ Professional Intro Grid */}
-			<section className='relative px-4 pt-4 pb-10 mx-auto max-w-7xl sm:px-6 md:px-8 lg:pt-8'>
+			<section className='relative px-4 pt-4 pb-6 mx-auto max-w-7xl sm:px-6 md:px-8 lg:pt-8'>
 				{/* Background Glows for Depth */}
 				<div className='absolute top-0 left-1/4 w-[30vw] h-[30vw] bg-[var(--color-brand)]/10 blur-[150px] -z-10 rounded-full' />
 				<div className='absolute bottom-0 right-1/4 w-[20vw] h-[20vw] bg-[var(--color-secondary)]/10 blur-[120px] -z-10 rounded-full' />
 
-				<div className='grid grid-cols-1 lg:grid-cols-[1.2fr_2fr] gap-12 lg:gap-16 items-start'>
+				<div className='grid grid-cols-1 lg:grid-cols-[1.2fr_2fr] gap-8 lg:gap-12 items-start'>
 					{/* Left: Identity Section */}
 					<motion.div
 						initial={{ opacity: 0, scale: 0.95 }}
@@ -83,22 +83,21 @@ export default function About() {
 
 							<div className='relative z-10 space-y-8'>
 								<p className='text-lg font-light leading-relaxed text-left text-gray-300 md:text-2xl'>
-									AI Automation Architect{' '}
+									AI Automation Architect helping businesses fix{' '}
 									<span className='font-bold text-white'>
-										4+ years of experience
+										operational bottlenecks
 									</span>{' '}
-									saving businesses time and increansing efficiency through
-									intelligent automation.
+									and building automated systems that support growth.
 								</p>
 								<p className='text-base font-light leading-relaxed text-left text-gray-400 md:text-lg'>
 									Skilled in leveraging no-code and low-code platforms to design
 									scalable, maintainable solutions that integrate seamlessly
-									with existing workflows.{' '}
+									with existing workflows. I step in to map how the business
+									moves from marketing to sales to onboarding to delivery and
+									retention, then identify where{' '}
 									<span className='text-[var(--color-brand-light)] font-bold'>
-										15-20 hours weekly
+										revenue slows down.
 									</span>{' '}
-									while eliminating operational costs through smart automation
-									and self-hosted solutions.
 								</p>
 							</div>
 
