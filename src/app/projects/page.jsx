@@ -210,7 +210,7 @@ export default function Projects() {
 
 	return (
 		<>
-			<section className='max-w-7xl mx-auto px-4 sm:px-8 py-12 sm:py-20 min-h-[70vh] sm:min-h-[85vh] flex flex-col justify-center overflow-x-visible md:overflow-x-hidden'>
+			<section className='max-w-7xl mx-auto px-4 sm:px-8 py-12 sm:py-20 min-h-[70vh] sm:min-h-[85vh] flex flex-col justify-center overflow-x-visible' style={{ overflowX: 'clip' }}>
 				<div className='relative z-10 w-full mb-16 text-center'>
 					<h1
 						className='mb-4 text-3xl font-extrabold tracking-wide text-white md:text-5xl'

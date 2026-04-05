@@ -14,7 +14,7 @@ import TestimonialsSection from '@/components/TestimonialsSection'
 
 export default function About() {
 	return (
-		<div className='relative w-full pb-20 overflow-x-hidden sm:pb-32'>
+		<div className='relative w-full pb-20 sm:pb-32' style={{ overflowX: 'clip' }}>
 			{/* ✦ Professional Intro Grid */}
 			<section className='relative px-4 pt-4 pb-6 mx-auto max-w-7xl sm:px-6 md:px-8 lg:pt-8'>
 				{/* Background Glows for Depth */}

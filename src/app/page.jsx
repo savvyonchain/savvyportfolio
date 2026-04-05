@@ -15,9 +15,9 @@ import TestimonialsSection from '@/components/TestimonialsSection'
 
 export default function Home() {
 	return (
-		<div className='w-full min-w-0 overflow-x-hidden'>
+		<div className='w-full min-w-0' style={{ overflowX: 'clip' }}>
 			{/* 01. Hero Section */}
-			<section className='min-h-[80vh] flex items-center justify-center overflow-x-hidden w-full relative pt-6 pb-6'>
+			<section className='min-h-[80vh] flex items-center justify-center w-full relative pt-6 pb-6' style={{ overflowX: 'clip' }}>
 				<div className='grid items-center grid-cols-1 gap-10 px-4 mx-auto sm:gap-16 sm:px-6 md:px-8 max-w-7xl md:grid-cols-2'>
 					{/* Left Content */}
 					<motion.div
@@ -85,17 +85,21 @@ export default function Home() {
 							transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
 							className='relative w-full max-w-[260px] sm:max-w-[320px] mx-auto md:ml-auto aspect-square'
 						>
+							{/* Static glow to avoid rotating a 60px blur shadow */}
+							<div className='absolute inset-[-10%] rounded-full shadow-[0_0_60px_rgba(108,59,137,0.4)] pointer-events-none opacity-40 mix-blend-screen' />
+
 							<motion.div
 								animate={{ rotate: 360 }}
 								transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
-								className='absolute inset-[-10%] rounded-full border border-[var(--color-brand)] shadow-[0_0_60px_rgba(108,59,137,0.5)] pointer-events-none opacity-40'
+								className='absolute inset-[-10%] rounded-full border border-[var(--color-brand)] pointer-events-none opacity-40'
 								style={{
 									borderTopColor: 'transparent',
 									borderBottomColor: 'transparent',
 								}}
 							/>
-							<div className='relative w-full h-full p-2 rounded-full overflow-hidden bg-gradient-to-br from-white/20 to-white/5 backdrop-blur-3xl border border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.5)]'>
-								<div className='relative w-full h-full overflow-hidden rounded-full'>
+							{/* Removed backdrop-blur-3xl from moving element to save GPU */}
+							<div className='relative w-full h-full p-2 rounded-full overflow-hidden bg-gradient-to-br from-white/20 to-white/5 border border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.5)] bg-[#0a0612]/80'>
+								<div className='relative w-full h-full rounded-full' style={{ overflow: 'clip' }}>
 									<Image
 										src={homepagePhoto}
 										alt='Savvy'
@@ -113,7 +117,7 @@ export default function Home() {
 									ease: 'easeInOut',
 									delay: 1,
 								}}
-								className='absolute top-[10%] left-0 sm:-left-[6%] md:-left-[10%] p-2.5 sm:p-4 bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl sm:rounded-2xl shadow-2xl flex items-center justify-center text-white'
+								className='absolute top-[10%] left-0 sm:-left-[6%] md:-left-[10%] p-2.5 sm:p-4 bg-[#1a1125] border border-white/20 rounded-xl sm:rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.8)] flex items-center justify-center text-white'
 							>
 								<motion.div
 									animate={{ rotate: 360 }}
@@ -134,7 +138,7 @@ export default function Home() {
 									ease: 'easeInOut',
 									delay: 2,
 								}}
-								className='absolute bottom-[10%] right-0 sm:-right-[4%] md:-right-[5%] p-2.5 sm:p-4 bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl sm:rounded-2xl shadow-2xl flex items-center justify-center text-white'
+								className='absolute bottom-[10%] right-0 sm:-right-[4%] md:-right-[5%] p-2.5 sm:p-4 bg-[#1a1125] border border-white/20 rounded-xl sm:rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.8)] flex items-center justify-center text-white'
 							>
 								<Bot className='w-6 h-6 sm:w-8 sm:h-8 filter drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]' />
 							</motion.div>

@@ -104,7 +104,7 @@ export default function ToolsCarousel() {
   const activeIdx = Math.round(progress) % tools.length
 
   return (
-    <section className='w-full py-10 overflow-hidden bg-black/40 relative'>
+    <section className='w-full py-10 bg-black/40 relative' style={{ overflowX: 'clip' }}>
 
       {/* Ambient glow */}
       <div className='absolute inset-0 pointer-events-none flex items-center justify-center'>

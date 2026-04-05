@@ -18,7 +18,7 @@ export default function TestimonialsSection() {
 	if (testimonials.length === 0) return null
 
 	return (
-		<section className='w-full py-8 sm:py-10 md:py-12 bg-white/[0.02] border-t border-white/5 relative overflow-hidden'>
+		<section className='w-full py-8 sm:py-10 md:py-12 bg-white/[0.02] border-t border-white/5 relative' style={{ overflowX: 'clip' }}>
 			{/* Subtle grid background similar to sample */}
 			<div className='absolute inset-0 opacity-[0.03] pointer-events-none' 
 				style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px' }} 

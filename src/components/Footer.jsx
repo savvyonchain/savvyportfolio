@@ -34,7 +34,7 @@ export default function Footer() {
 	]
 
 	return (
-		<footer className='relative z-10 w-full pt-20 pb-12 overflow-hidden border-t border-white/5 bg-black/20 backdrop-blur-xl'>
+		<footer className='relative z-10 w-full pt-20 pb-12 border-t border-white/5 bg-black/20 backdrop-blur-xl' style={{ overflowX: 'clip' }}>
 			{/* Ambient background glow */}
 			<div className='absolute bottom-0 left-1/2 -translate-x-1/2 w-[60vw] h-[20vw] bg-[var(--color-brand)]/5 blur-[100px] rounded-full pointer-events-none' />
 

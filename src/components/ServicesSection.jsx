@@ -18,7 +18,7 @@ export default function ServicesSection() {
 	if (services.length === 0) return null
 
 	return (
-		<section className='w-full pt-6 pb-8 sm:pb-10 md:pb-12 bg-black/40 relative overflow-hidden'>
+		<section className='w-full pt-6 pb-8 sm:pb-10 md:pb-12 bg-black/40 relative' style={{ overflowX: 'clip' }}>
 			{/* Ambient Glows for Section Depth */}
 			<div className='absolute top-0 right-0 w-[40vw] h-[40vw] bg-[var(--color-brand)]/5 blur-[150px] rounded-full -z-10' />
 			<div className='absolute bottom-0 left-0 w-[30vw] h-[30vw] bg-[var(--color-secondary)]/5 blur-[120px] rounded-full -z-10' />
