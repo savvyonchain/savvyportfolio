@@ -208,10 +208,34 @@ export default function AdminPanel() {
 		}
 	}
 
+	const deleteStorageFile = async (url) => {
+		try {
+			if (!url || typeof url !== 'string') return;
+			const parts = new URL(url).pathname.split('/');
+			const idx = parts.indexOf('portfolio-media');
+			if (idx !== -1) {
+				const path = decodeURIComponent(parts.slice(idx + 1).join('/'));
+				await supabase.storage.from('portfolio-media').remove([path]);
+			}
+		} catch (e) {
+			console.error('Failed to parse URL for storage cleanup');
+		}
+	}
+
 	const handleDeleteProject = async (id) => {
 		if (!confirm('Are you sure?')) return
+		
+		const projectToDelete = projects.find(p => p.id === id);
 		const { error } = await supabase.from('projects').delete().eq('id', id)
+		
 		if (!error) {
+			if (projectToDelete) {
+				if (projectToDelete.screenshot_url) {
+					const urls = projectToDelete.screenshot_url.split(',').map(u => u.trim()).filter(Boolean);
+					for (const url of urls) await deleteStorageFile(url);
+				}
+				if (projectToDelete.video_url) await deleteStorageFile(projectToDelete.video_url);
+			}
 			toast.success('Project removed')
 			loadData()
 		}
@@ -245,8 +269,17 @@ export default function AdminPanel() {
 
 	const handleDelete = async (table, id) => {
 		if (!confirm('Are you sure?')) return
+		
+		// Find the target to grab images to cleanly delete before wiping the row
+		let targetItem = null;
+		if (table === 'tools') targetItem = tools.find(t => t.id === id);
+		if (table === 'testimonials') targetItem = testimonials.find(t => t.id === id);
+
 		const { error } = await supabase.from(table).delete().eq('id', id)
 		if (!error) {
+			if (targetItem?.image_url) await deleteStorageFile(targetItem.image_url);
+			if (targetItem?.avatar_url) await deleteStorageFile(targetItem.avatar_url);
+
 			toast.success('Item removed')
 			loadData()
 		}
