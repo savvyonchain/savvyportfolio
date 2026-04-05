@@ -40,17 +40,7 @@ export default function ToolsCarousel() {
   const rafRef       = useRef(null)
   const viewRef      = useRef('carousel')
 
-  // Detect mobile — default to grid (no RAF) to keep scroll smooth
-  useEffect(() => {
-    const check = () => {
-      const mobile = window.innerWidth < 640
-      setView(mobile ? 'grid' : 'carousel')
-      viewRef.current = mobile ? 'grid' : 'carousel'
-    }
-    check()
-    window.addEventListener('resize', check, { passive: true })
-    return () => window.removeEventListener('resize', check)
-  }, [])
+
 
   useEffect(() => { viewRef.current = view }, [view])
   useEffect(() => { lenRef.current = tools.length }, [tools.length])

@@ -103,7 +103,7 @@ export default function Home() {
 									<Image
 										src={homepagePhoto}
 										alt='Savvy'
-										className='object-cover object-top w-full h-full hover:scale-[1.02] transition-transform duration-[1.5s] ease-out mix-blend-luminosity hover:mix-blend-normal'
+										className='object-cover object-top w-full h-full hover:scale-[1.02] transition-transform duration-[1.5s] ease-out'
 										priority
 									/>
 								</div>
