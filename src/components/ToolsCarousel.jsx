@@ -29,9 +29,9 @@ function getProps(offset) {
 }
 
 export default function ToolsCarousel() {
-  const [tools, setTools]     = useState([])
-  const [progress, setProgress] = useState(0)   // float, drives positions
-  const [view, setView]       = useState('carousel')
+  const [tools, setTools]       = useState([])
+  const [progress, setProgress] = useState(0)
+  const [view, setView]         = useState('carousel')
 
   const progressRef  = useRef(0)
   const pausedRef    = useRef(false)
@@ -39,6 +39,18 @@ export default function ToolsCarousel() {
   const lastTimeRef  = useRef(null)
   const rafRef       = useRef(null)
   const viewRef      = useRef('carousel')
+
+  // Detect mobile — default to grid (no RAF) to keep scroll smooth
+  useEffect(() => {
+    const check = () => {
+      const mobile = window.innerWidth < 640
+      setView(mobile ? 'grid' : 'carousel')
+      viewRef.current = mobile ? 'grid' : 'carousel'
+    }
+    check()
+    window.addEventListener('resize', check, { passive: true })
+    return () => window.removeEventListener('resize', check)
+  }, [])
 
   useEffect(() => { viewRef.current = view }, [view])
   useEffect(() => { lenRef.current = tools.length }, [tools.length])

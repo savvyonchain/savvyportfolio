@@ -48,13 +48,13 @@ export default function Contact() {
 				.insert([{ ...data, created_at: new Date() }])
 
 			if (error) throw error
-			
+
 			// Trigger Email Notification
 			try {
 				await fetch('/api/contact', {
 					method: 'POST',
 					body: JSON.stringify(data),
-					headers: { 'Content-Type': 'application/json' }
+					headers: { 'Content-Type': 'application/json' },
 				})
 			} catch (notifErr) {
 				console.warn('Email notification error:', notifErr)
@@ -82,7 +82,7 @@ export default function Contact() {
 			>
 				<div className='mb-16 text-center'>
 					<h1
-						className='mb-6 text-3xl sm:text-4xl font-extrabold text-white md:text-5xl lg:text-7xl px-1 break-words'
+						className='px-1 mb-6 text-3xl font-extrabold text-white break-words sm:text-4xl md:text-5xl lg:text-7xl'
 						style={{ fontFamily: 'var(--font-space)' }}
 					>
 						Let&apos;s{' '}
@@ -188,7 +188,6 @@ export default function Contact() {
 							</h2>
 							<p className='relative z-10 mb-10 font-light leading-relaxed text-gray-400'>
 								Grab 30 minutes to review your operational bottlenecks.
-								I&apos;ll build you a blueprint live on the call.
 							</p>
 
 							<button
@@ -296,7 +295,7 @@ export default function Contact() {
 							</div>
 						</div>
 
-						<div className='flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 p-5 sm:p-8 border rounded-2xl sm:rounded-3xl bg-secondary/10 border-secondary/20'>
+						<div className='flex flex-col items-start gap-4 p-5 border sm:flex-row sm:items-center sm:gap-6 sm:p-8 rounded-2xl sm:rounded-3xl bg-secondary/10 border-secondary/20'>
 							<div className='flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400'>
 								<span className='relative flex w-3 h-3'>
 									<span className='absolute inline-flex w-full h-full rounded-full opacity-75 animate-ping bg-emerald-400'></span>
