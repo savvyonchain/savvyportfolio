@@ -125,28 +125,7 @@ export default function Projects() {
 		if (activeIndex > 0) setActiveIndex(activeIndex - 1)
 	}
 
-	const renderBulletList = (text) => {
-		if (!text) return null
-		const lines = text.split('\n').filter((line) => line.trim().length > 0)
-		if (lines.length <= 1)
-			return <p className='font-light leading-relaxed text-gray-300'>{text}</p>
 
-		return (
-			<ul className='space-y-4'>
-				{lines.map((line, idx) => (
-					<li
-						key={idx}
-						className='flex gap-4 text-gray-300 font-light leading-relaxed'
-					>
-						<span className='text-[var(--color-brand-light)] font-bold mt-1.5 flex-shrink-0'>
-							✦
-						</span>
-						<span>{line.trim()}</span>
-					</li>
-				))}
-			</ul>
-		)
-	}
 
 	const getIcon = (iconName, iconSize = 100) => {
 		const props = {
@@ -576,22 +555,50 @@ export default function Projects() {
 														02 / Strategic Brief
 													</label>
 													<div className='space-y-6'>
-														<div className='p-8 rounded-3xl bg-white/5 border border-white/10 relative group overflow-hidden'>
-															<div className='absolute inset-0 bg-red-500/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none' />
-															<h4 className='text-sm font-black text-red-400 uppercase tracking-widest mb-4 flex items-center gap-3'>
-																<span className='w-2 h-2 rounded-full bg-red-400' />{' '}
+														<div className='flex flex-col gap-3'>
+															<h4 className='text-[11px] font-black text-[#e7701e] uppercase tracking-widest flex items-center gap-2 px-1'>
 																The Problem
 															</h4>
-															{renderBulletList(selectedProject.problem)}
+															<div className='py-6 px-6 bg-[#18110c] border-l-[3px] border-[#e7701e] rounded-r-xl shadow-lg'>
+																{(() => {
+																	const txt = selectedProject.problem
+																	if (!txt) return null
+																	const lines = txt.split('\n').filter((line) => line.trim().length > 0)
+																	return (
+																		<ul className='space-y-4'>
+																			{lines.map((line, idx) => (
+																				<li key={idx} className='flex gap-4 items-start text-gray-300 font-medium leading-relaxed tracking-wide text-[15px]'>
+																					<span className='w-1.5 h-1.5 rounded-full bg-[#e7701e] mt-2.5 shrink-0 opacity-90' />
+																					<span className='opacity-90'>{line.trim()}</span>
+																				</li>
+																			))}
+																		</ul>
+																	)
+																})()}
+															</div>
 														</div>
 
-														<div className='p-8 rounded-3xl bg-white/5 border border-white/10 relative group overflow-hidden'>
-															<div className='absolute inset-0 bg-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none' />
-															<h4 className='text-sm font-black text-blue-400 uppercase tracking-widest mb-4 flex items-center gap-3'>
-																<span className='w-2 h-2 rounded-full bg-blue-400' />{' '}
+														<div className='flex flex-col gap-3'>
+															<h4 className='text-[11px] font-black text-blue-400 uppercase tracking-widest flex items-center gap-2 px-1'>
 																The Solution
 															</h4>
-															{renderBulletList(selectedProject.solution)}
+															<div className='py-6 px-6 bg-[#0a111a] border-l-[3px] border-blue-500 rounded-r-xl shadow-lg'>
+																{(() => {
+																	const txt = selectedProject.solution
+																	if (!txt) return null
+																	const lines = txt.split('\n').filter((line) => line.trim().length > 0)
+																	return (
+																		<ul className='space-y-4'>
+																			{lines.map((line, idx) => (
+																				<li key={idx} className='flex gap-4 items-start text-gray-300 font-medium leading-relaxed tracking-wide text-[15px]'>
+																					<span className='w-1.5 h-1.5 rounded-full bg-blue-500 mt-2.5 shrink-0 opacity-90' />
+																					<span className='opacity-90'>{line.trim()}</span>
+																				</li>
+																			))}
+																		</ul>
+																	)
+																})()}
+															</div>
 														</div>
 													</div>
 												</section>

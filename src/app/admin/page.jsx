@@ -24,6 +24,26 @@ import {
 } from 'lucide-react'
 import { Toaster, toast } from 'react-hot-toast'
 
+const GRADIENT_PAIRS = [
+	{ start: '#F53844', end: '#42378F' },
+	{ start: '#43CBFF', end: '#9708CC' },
+	{ start: '#F97794', end: '#623AA2' },
+	{ start: '#81FFEF', end: '#F067B4' },
+	{ start: '#F6CEEC', end: '#D939CD' },
+	{ start: '#5EE7DF', end: '#B490CA' },
+	{ start: '#FF61D2', end: '#FE9090' },
+	{ start: '#3B2667', end: '#BC78EC' },
+	{ start: '#00C9FF', end: '#92FE9D' },
+	{ start: '#F093FB', end: '#F5576C' },
+	{ start: '#12c2e9', end: '#f64f59' },
+	{ start: '#b92b27', end: '#1565C0' },
+	{ start: '#11998e', end: '#38ef7d' },
+	{ start: '#FC466B', end: '#3F5EFB' },
+	{ start: '#f857a6', end: '#ff5858' },
+]
+
+const getRandomGradientPair = () => GRADIENT_PAIRS[Math.floor(Math.random() * GRADIENT_PAIRS.length)];
+
 export default function AdminPanel() {
 	const [activeTab, setActiveTab] = useState('projects')
 	const [session, setSession] = useState(null)
@@ -38,6 +58,7 @@ export default function AdminPanel() {
 		screenshot: null,
 		video: null,
 	})
+	const [randomGradient, setRandomGradient] = useState({ start: '#6c3b89', end: '#bf55ec' })
 
 	const [screenshotInputs, setScreenshotInputs] = useState([]);
 
@@ -491,6 +512,7 @@ export default function AdminPanel() {
 								onClick={() => {
 									setEditingProject(null)
 									setSelectedFiles({ screenshot: null, video: null })
+									setRandomGradient(getRandomGradientPair())
 									setIsModalOpen(true)
 								}}
 								className='px-8 py-4 bg-[var(--color-brand)] text-white font-bold rounded-2xl flex items-center gap-3 hover:scale-105 transition-all'
@@ -1229,7 +1251,7 @@ export default function AdminPanel() {
 											<input
 												name='gradient_start'
 												defaultValue={
-													editingProject?.gradient_start || '#6c3b89'
+													editingProject?.gradient_start || randomGradient.start
 												}
 												className='w-full px-4 py-3 border bg-white/5 rounded-2xl border-white/10'
 											/>
@@ -1240,7 +1262,7 @@ export default function AdminPanel() {
 											</label>
 											<input
 												name='gradient_end'
-												defaultValue={editingProject?.gradient_end || '#bf55ec'}
+												defaultValue={editingProject?.gradient_end || randomGradient.end}
 												className='w-full px-4 py-3 border bg-white/5 rounded-2xl border-white/10'
 											/>
 										</div>
