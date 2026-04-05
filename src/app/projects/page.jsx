@@ -672,24 +672,62 @@ export default function Projects() {
 												<div className='w-full aspect-video rounded-[2.5rem] overflow-hidden bg-black border border-white/10 shadow-[0_30px_70px_rgba(0,0,0,0.7)] relative'>
 													{selectedProject.video_url ? (
 														selectedProject.video_url.includes('youtube.com') ||
+														selectedProject.video_url.includes('youtu.be') ||
+														selectedProject.video_url.includes('vimeo.com') ||
 														selectedProject.video_url.includes('loom.com') ? (
-															<div
-																className='w-full h-full flex items-center justify-center group cursor-pointer relative'
-																onClick={() =>
-																	window.open(
-																		selectedProject.video_url,
-																		'_blank',
-																	)
-																}
-															>
-																<div className='absolute inset-0 bg-gradient-to-tr from-[var(--color-brand)]/10 to-transparent' />
-																<div className='w-24 h-24 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 flex items-center justify-center group-hover:bg-[var(--color-brand)] group-hover:border-[var(--color-brand)] transition-all duration-300 scale-90 group-hover:scale-100'>
-																	<div className='w-0 h-0 border-t-[12px] border-t-transparent border-l-[22px] border-l-white border-b-[12px] border-b-transparent ml-2' />
-																</div>
-																<p className='absolute bottom-8 text-xs font-bold text-white/40 tracking-widest uppercase'>
-																	Launch Full Walkthrough
-																</p>
-															</div>
+															(() => {
+																let embedUrl = selectedProject.video_url;
+																try {
+																	if (embedUrl.includes('youtube.com/watch')) {
+																		const v = new URL(embedUrl).searchParams.get('v');
+																		if (v) embedUrl = `https://www.youtube.com/embed/${v}?autoplay=1`;
+																	} else if (embedUrl.includes('youtu.be/')) {
+																		const v = embedUrl.split('youtu.be/')[1]?.split('?')[0];
+																		if (v) embedUrl = `https://www.youtube.com/embed/${v}?autoplay=1`;
+																	} else if (embedUrl.includes('loom.com/share/')) {
+																		const v = embedUrl.split('share/')[1]?.split('?')[0];
+																		if (v) embedUrl = `https://www.loom.com/embed/${v}?autoplay=1`;
+																	} else if (embedUrl.includes('vimeo.com/')) {
+																		const v = embedUrl.split('vimeo.com/')[1]?.split('?')[0];
+																		if (v) embedUrl = `https://player.vimeo.com/video/${v}?autoplay=1`;
+																	}
+																} catch (e) {}
+
+																return (
+																	<div className="w-full h-full relative group flex items-center justify-center bg-black">
+																		{videoPlayingId === selectedProject.id ? (
+																			<iframe
+																				src={embedUrl}
+																				className="w-full h-full absolute inset-0 border-0"
+																				allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+																				allowFullScreen
+																			/>
+																		) : (
+																			<div
+																				className='w-full h-full flex items-center justify-center cursor-pointer relative'
+																				onClick={() => setVideoPlayingId(selectedProject.id)}
+																			>
+																				<div className='absolute inset-0 bg-gradient-to-tr from-[var(--color-brand)]/20 to-black/60 z-10' />
+																				
+																				{selectedProject.screenshot_url && (
+																					<img 
+																						src={selectedProject.screenshot_url.split(',').map(s => s.trim()).filter(Boolean)[0]} 
+																						className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-50 transition-opacity duration-500 z-0"
+																						alt="Video Thumbnail"
+																					/>
+																				)}
+
+																				<div className='w-24 h-24 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center group-hover:bg-[var(--color-brand)] group-hover:border-[var(--color-brand)] transition-all duration-300 scale-90 group-hover:scale-100 z-20 shadow-[0_0_40px_rgba(0,0,0,0.6)]'>
+																					<div className='w-0 h-0 border-t-[12px] border-t-transparent border-l-[22px] border-l-white border-b-[12px] border-b-transparent ml-2' />
+																				</div>
+																				<p className='absolute bottom-8 text-xs font-bold text-white/70 tracking-widest uppercase z-20'>
+																					Play Functional Walkthrough
+																				</p>
+																			</div>
+																		)}
+																	</div>
+																)
+															})()
 														) : videoPlayingId === selectedProject.id ? (
 															<>
 																<video
