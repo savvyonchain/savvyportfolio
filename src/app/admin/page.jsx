@@ -39,6 +39,8 @@ export default function AdminPanel() {
 		video: null,
 	})
 
+	const [screenshotInputs, setScreenshotInputs] = useState([]);
+
 	// Messages state
 	const [messages, setMessages] = useState([])
 
@@ -83,7 +85,14 @@ export default function AdminPanel() {
 
 	// Lock scroll when any modal is open
 	useEffect(() => {
-		const isAnyModalOpen = isModalOpen || isSkillModalOpen || isToolModalOpen || isServiceModalOpen || isProcessModalOpen || isExperienceModalOpen || isTestimonialModalOpen
+		const isAnyModalOpen =
+			isModalOpen ||
+			isSkillModalOpen ||
+			isToolModalOpen ||
+			isServiceModalOpen ||
+			isProcessModalOpen ||
+			isExperienceModalOpen ||
+			isTestimonialModalOpen
 		if (isAnyModalOpen) {
 			document.body.style.overflow = 'hidden'
 		} else {
@@ -92,7 +101,26 @@ export default function AdminPanel() {
 		return () => {
 			document.body.style.overflow = 'unset'
 		}
-	}, [isModalOpen, isSkillModalOpen, isToolModalOpen, isServiceModalOpen, isProcessModalOpen, isExperienceModalOpen, isTestimonialModalOpen])
+	}, [
+		isModalOpen,
+		isSkillModalOpen,
+		isToolModalOpen,
+		isServiceModalOpen,
+		isProcessModalOpen,
+		isExperienceModalOpen,
+		isTestimonialModalOpen,
+	])
+
+	useEffect(() => {
+		if (isModalOpen) {
+			if (editingProject?.screenshot_url) {
+				const urls = editingProject.screenshot_url.split(',').map(s => s.trim()).filter(Boolean);
+				setScreenshotInputs(urls.map(url => ({ type: 'link', url })));
+			} else {
+				setScreenshotInputs([]);
+			}
+		}
+	}, [isModalOpen, editingProject]);
 
 	const checkSession = async () => {
 		const {
@@ -155,7 +183,9 @@ export default function AdminPanel() {
 		setProcessSteps(pr || [])
 		setExperience(ex || [])
 		setTestimonials(ts || [])
-		setLetter(lt || { title: '', content: '', closing_text: '', signature_name: '' })
+		setLetter(
+			lt || { title: '', content: '', closing_text: '', signature_name: '' },
+		)
 	}
 
 	const handleFileUpload = async (file, path) => {
@@ -916,21 +946,25 @@ export default function AdminPanel() {
 								onClick={async () => {
 									setSavingLetter(true)
 									try {
-										const payload = { ...letter, is_active: true, updated_at: new Date() }
-										let error;
+										const payload = {
+											...letter,
+											is_active: true,
+											updated_at: new Date(),
+										}
+										let error
 										if (letter.id) {
 											const { error: updateError } = await supabase
 												.from('cover_letter')
 												.update(payload)
 												.eq('id', letter.id)
-											error = updateError;
+											error = updateError
 										} else {
 											const { error: insertError } = await supabase
 												.from('cover_letter')
 												.insert([payload])
-											error = insertError;
+											error = insertError
 										}
-										
+
 										if (error) throw error
 										toast.success('Letter successfully updated!')
 										loadData()
@@ -943,30 +977,42 @@ export default function AdminPanel() {
 								disabled={savingLetter || !letter}
 								className='px-10 py-4 bg-[var(--color-brand)] text-white font-black rounded-2xl flex items-center gap-3 hover:scale-105 transition-all shadow-xl disabled:opacity-50'
 							>
-								{savingLetter ? <Loader2 className='animate-spin' size={20} /> : <Save size={20} />} 
+								{savingLetter ? (
+									<Loader2 className='animate-spin' size={20} />
+								) : (
+									<Save size={20} />
+								)}
 								Publish Letter
 							</button>
 						</div>
 
 						{letter ? (
 							<div className='max-w-4xl p-10 bg-white/5 border border-white/10 rounded-[3rem] space-y-10'>
-								<div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
+								<div className='grid grid-cols-1 gap-8 md:grid-cols-2'>
 									<div className='space-y-3'>
-										<label className='text-[10px] font-black tracking-[0.3em] text-gray-500 uppercase ml-2'>Greeting / Title</label>
-										<input 
+										<label className='text-[10px] font-black tracking-[0.3em] text-gray-500 uppercase ml-2'>
+											Greeting / Title
+										</label>
+										<input
 											type='text'
 											value={letter.title || ''}
-											onChange={(e) => setLetter({...letter, title: e.target.value})}
+											onChange={(e) =>
+												setLetter({ ...letter, title: e.target.value })
+											}
 											className='w-full px-8 py-5 bg-white/5 border border-white/10 rounded-2xl text-white outline-none focus:border-[var(--color-brand)] transition-all'
 											placeholder='To My Next Team,'
 										/>
 									</div>
 									<div className='space-y-3'>
-										<label className='text-[10px] font-black tracking-[0.3em] text-gray-500 uppercase ml-2'>Closing Remark</label>
-										<input 
+										<label className='text-[10px] font-black tracking-[0.3em] text-gray-500 uppercase ml-2'>
+											Closing Remark
+										</label>
+										<input
 											type='text'
 											value={letter.closing_text || ''}
-											onChange={(e) => setLetter({...letter, closing_text: e.target.value})}
+											onChange={(e) =>
+												setLetter({ ...letter, closing_text: e.target.value })
+											}
 											className='w-full px-8 py-5 bg-white/5 border border-white/10 rounded-2xl text-white outline-none focus:border-[var(--color-brand)] transition-all'
 											placeholder='Warmly,'
 										/>
@@ -974,22 +1020,30 @@ export default function AdminPanel() {
 								</div>
 
 								<div className='space-y-3'>
-									<label className='text-[10px] font-black tracking-[0.3em] text-gray-500 uppercase ml-2'>Letter Body</label>
-									<textarea 
+									<label className='text-[10px] font-black tracking-[0.3em] text-gray-500 uppercase ml-2'>
+										Letter Body
+									</label>
+									<textarea
 										rows='15'
 										value={letter.content || ''}
-										onChange={(e) => setLetter({...letter, content: e.target.value})}
+										onChange={(e) =>
+											setLetter({ ...letter, content: e.target.value })
+										}
 										className='w-full px-8 py-8 bg-white/5 border border-white/10 rounded-3xl text-white outline-none focus:border-[var(--color-brand)] transition-all leading-relaxed custom-scrollbar'
 										placeholder='Write your heart out...'
 									/>
 								</div>
 
-								<div className='space-y-3 max-w-sm'>
-									<label className='text-[10px] font-black tracking-[0.3em] text-gray-500 uppercase ml-2'>Signature Name</label>
-									<input 
+								<div className='max-w-sm space-y-3'>
+									<label className='text-[10px] font-black tracking-[0.3em] text-gray-500 uppercase ml-2'>
+										Signature Name
+									</label>
+									<input
 										type='text'
 										value={letter.signature_name || ''}
-										onChange={(e) => setLetter({...letter, signature_name: e.target.value})}
+										onChange={(e) =>
+											setLetter({ ...letter, signature_name: e.target.value })
+										}
 										className='w-full px-8 py-5 bg-white/5 border border-white/10 rounded-2xl text-white outline-none focus:border-[var(--color-brand)] transition-all'
 										placeholder='Savvy'
 									/>
@@ -997,7 +1051,10 @@ export default function AdminPanel() {
 							</div>
 						) : (
 							<div className='flex justify-center p-20'>
-								<Loader2 className='animate-spin text-[var(--color-brand)]' size={48} />
+								<Loader2
+									className='animate-spin text-[var(--color-brand)]'
+									size={48}
+								/>
 							</div>
 						)}
 					</motion.div>
@@ -1038,18 +1095,35 @@ export default function AdminPanel() {
 										const payload = Object.fromEntries(fd.entries())
 										payload.outcomes = outcomes
 
-										// Handle uploads
-										const screenFile = fd.get('screenshot_file')
+										// Handle multiple dynamic screenshots
+										const urlItems = fd.getAll('screenshot_urls_array')
+										const fileItems = fd.getAll('screenshot_files_array')
 										const videoFile = fd.get('video_file')
 
-										if (
-											screenFile &&
-											screenFile instanceof File &&
-											screenFile.size > 0
-										) {
-											const url = await handleFileUpload(screenFile, 'images')
-											if (url) payload.screenshot_url = url
+										let urls = []
+										
+										// Parse manually added links (split by comma just in case they pasted a list)
+										for (const urlStr of urlItems) {
+											if (urlStr && typeof urlStr === 'string') {
+												const splitUrls = urlStr.split(',').map(s => s.trim()).filter(Boolean)
+												urls.push(...splitUrls)
+											}
 										}
+										
+										// Upload natively selected files
+										for (let file of fileItems) {
+											if (file instanceof File && file.size > 0) {
+												const uploadedUrl = await handleFileUpload(file, 'images')
+												if (uploadedUrl) urls.push(uploadedUrl.trim())
+											}
+										}
+										
+										if (urls.length > 0) {
+											payload.screenshot_url = urls.join(',')
+										} else {
+											payload.screenshot_url = ''
+										}
+
 										if (
 											videoFile &&
 											videoFile instanceof File &&
@@ -1059,7 +1133,8 @@ export default function AdminPanel() {
 											if (url) payload.video_url = url
 										}
 
-										delete payload.screenshot_file
+										delete payload.screenshot_urls_array
+										delete payload.screenshot_files_array
 										delete payload.video_file
 
 										await handleAction(
@@ -1137,26 +1212,45 @@ export default function AdminPanel() {
 											/>
 										</div>
 									</div>
-									<div className='p-6 border bg-white/5 rounded-2xl border-white/10'>
-										<label className='block mb-3 text-xs font-black tracking-widest text-gray-500 uppercase'>
-											Screenshot (Link or Upload)
-										</label>
-										<div className='space-y-4'>
-											<input
-												name='screenshot_url'
-												defaultValue={editingProject?.screenshot_url}
-												className='flex-1 w-full px-4 py-3 mb-2 border bg-white/5 border-white/10 rounded-xl'
-												placeholder='HTTPS Link...'
-											/>
-											<div className='flex items-center gap-4 p-4 border bg-white/5 rounded-xl border-white/5'>
-												<Upload size={16} className='text-gray-500' />
-												<input
-													type='file'
-													name='screenshot_file'
-													accept='image/*'
-													className='text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:bg-[var(--color-brand)] file:text-white hover:file:bg-[var(--color-brand-light)]'
-												/>
+									<div className='p-6 border bg-white/5 rounded-2xl border-white/10 md:col-span-2'>
+										<div className='flex justify-between items-center mb-4'>
+											<label className='block text-xs font-black tracking-widest text-gray-500 uppercase'>
+												Portfolio Screenshots
+											</label>
+											<div className='flex gap-2 relative'>
+												<button type='button' onClick={() => setScreenshotInputs([...screenshotInputs, { type: 'link', url: '' }])} className='text-xs px-3 py-1 bg-white/10 rounded hover:bg-white/20 transition-colors'>+ Add Link</button>
+												<button type='button' onClick={() => setScreenshotInputs([...screenshotInputs, { type: 'file' }])} className='text-xs px-3 py-1 bg-[var(--color-brand)]/20 text-[var(--color-brand-light)] rounded hover:bg-[var(--color-brand)]/40 transition-colors'>+ Upload File</button>
 											</div>
+										</div>
+
+										<div className='space-y-3'>
+											{screenshotInputs.length === 0 && <p className='text-xs text-gray-500 italic'>No screenshots added. Click above to add some.</p>}
+											{screenshotInputs.map((input, idx) => (
+												<div key={idx} className='flex items-center gap-3 p-3 bg-white/5 border border-white/5 rounded-xl'>
+													{input.type === 'link' ? (
+														<input
+															name='screenshot_urls_array'
+															defaultValue={input.url}
+															className='flex-1 w-full px-4 py-2 border bg-white/5 border-white/10 rounded-lg outline-none focus:border-[var(--color-brand)]'
+															placeholder='https://your-image-link.com/img.png'
+														/>
+													) : (
+														<div className='flex items-center gap-2 flex-1 w-full'>
+															<Upload size={16} className='text-gray-500' />
+															<input
+																type='file'
+																name='screenshot_files_array'
+																accept='image/*'
+																multiple
+																className='flex-1 text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:bg-[var(--color-brand)] file:text-white hover:file:bg-[var(--color-brand-light)]'
+															/>
+														</div>
+													)}
+													<button type='button' onClick={() => setScreenshotInputs(screenshotInputs.filter((_, i) => i !== idx))} className='p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors'>
+														<X size={16} />
+													</button>
+												</div>
+											))}
 										</div>
 									</div>
 									<div className='p-6 border bg-white/5 rounded-2xl border-white/10'>
@@ -1379,7 +1473,13 @@ export default function AdminPanel() {
 										}
 										delete payload.image_file
 
-										await handleAction('tools', payload, editingTool, setIsToolModalOpen, setEditingTool)
+										await handleAction(
+											'tools',
+											payload,
+											editingTool,
+											setIsToolModalOpen,
+											setEditingTool,
+										)
 									} catch (err) {
 										toast.error('Failed to save tool: ' + err.message)
 									} finally {
@@ -1748,7 +1848,9 @@ export default function AdminPanel() {
 											setEditingTestimonial,
 										)
 									} catch (err) {
-										toast.error('DB Error: Please make sure the Testimonials table has columns: image_url, rating, company')
+										toast.error(
+											'DB Error: Please make sure the Testimonials table has columns: image_url, rating, company',
+										)
 									} finally {
 										setSaving(false)
 									}
@@ -1804,7 +1906,7 @@ export default function AdminPanel() {
 										<select
 											name='rating'
 											defaultValue={editingTestimonial?.rating || 5}
-											className='w-full px-4 py-2 text-xs text-white border bg-black border-white/10 rounded-xl appearance-none'
+											className='w-full px-4 py-2 text-xs text-white bg-black border appearance-none border-white/10 rounded-xl'
 										>
 											{[5, 4, 3, 2, 1].map((n) => (
 												<option key={n} value={n}>
@@ -1853,7 +1955,11 @@ export default function AdminPanel() {
 										disabled={saving}
 										className='px-10 py-3 text-xs font-bold tracking-widest text-black uppercase bg-white rounded-xl'
 									>
-										{saving ? <Loader2 className='animate-spin' size={18} /> : 'Publish Review'}
+										{saving ? (
+											<Loader2 className='animate-spin' size={18} />
+										) : (
+											'Publish Review'
+										)}
 									</button>
 								</div>
 							</form>

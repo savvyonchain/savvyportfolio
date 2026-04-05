@@ -36,6 +36,7 @@ export default function Projects() {
 	const [videoLoadingId, setVideoLoadingId] = useState(null)
 	const [videoPlayingId, setVideoPlayingId] = useState(null)
 	const [videoError, setVideoError] = useState(null)
+	const [expandedImage, setExpandedImage] = useState(null)
 
 	useEffect(() => {
 		setPortalReady(true)
@@ -210,7 +211,10 @@ export default function Projects() {
 
 	return (
 		<>
-			<section className='max-w-7xl mx-auto px-4 sm:px-8 py-12 sm:py-20 min-h-[70vh] sm:min-h-[85vh] flex flex-col justify-center overflow-x-visible' style={{ overflowX: 'clip' }}>
+			<section
+				className='max-w-7xl mx-auto px-4 sm:px-8 py-12 sm:py-20 min-h-[70vh] sm:min-h-[85vh] flex flex-col justify-center overflow-x-visible'
+				style={{ overflowX: 'clip' }}
+			>
 				<div className='relative z-10 w-full mb-16 text-center'>
 					<h1
 						className='mb-4 text-3xl font-extrabold tracking-wide text-white md:text-5xl'
@@ -632,21 +636,33 @@ export default function Projects() {
 												<label className='text-[10px] uppercase font-black tracking-widest text-gray-500'>
 													Visual Interface
 												</label>
-												<div className='w-full aspect-video rounded-[2.5rem] overflow-hidden bg-white/5 border border-white/10 shadow-[0_30px_70px_rgba(0,0,0,0.7)] group relative'>
-													{selectedProject.screenshot_url ? (
-														<Image
-															src={selectedProject.screenshot_url}
-															alt='Interface'
-															fill
-															unoptimized
-															className='object-cover group-hover:scale-110 transition-transform duration-[2s]'
-														/>
+												{(() => {
+													const screenshots = selectedProject.screenshot_url
+														? selectedProject.screenshot_url.split(',').map(s => s.trim()).filter(Boolean)
+														: []
+													
+													return screenshots.length > 0 ? (
+														<div className='space-y-8'>
+															{screenshots.map((url, i) => (
+																<div
+																	key={i}
+																	className='w-full aspect-video rounded-[2.5rem] overflow-hidden bg-white/5 border border-white/10 shadow-[0_30px_70px_rgba(0,0,0,0.7)] group relative cursor-pointer'
+																	onClick={() => setExpandedImage(url)}
+																>
+																	<img
+																		src={url}
+																		alt={`Interface ${i + 1}`}
+																		className='absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2s]'
+																	/>
+																</div>
+															))}
+														</div>
 													) : (
-														<div className='w-full h-full flex items-center justify-center text-gray-700 italic'>
+														<div className='w-full aspect-video rounded-[2.5rem] overflow-hidden bg-white/5 border border-white/10 shadow-[0_30px_70px_rgba(0,0,0,0.7)] flex items-center justify-center text-gray-700 italic'>
 															Snapshot Unavailable
 														</div>
-													)}
-												</div>
+													)
+												})()}
 											</div>
 
 											<div className='space-y-6'>
@@ -684,11 +700,15 @@ export default function Projects() {
 																	preload='auto'
 																	className='w-full h-full object-contain'
 																	poster={
-																		selectedProject.screenshot_url || undefined
+																		selectedProject.screenshot_url
+																			? selectedProject.screenshot_url.split(',').map(s => s.trim()).filter(Boolean)[0]
+																			: undefined
 																	}
 																	onCanPlay={() => setVideoLoadingId(null)}
 																	onLoadedData={() => setVideoLoadingId(null)}
-																	onWaiting={() => setVideoLoadingId(selectedProject.id)}
+																	onWaiting={() =>
+																		setVideoLoadingId(selectedProject.id)
+																	}
 																	onPlaying={() => setVideoLoadingId(null)}
 																	onError={() => {
 																		setVideoLoadingId(null)
@@ -731,13 +751,11 @@ export default function Projects() {
 																}}
 															>
 																{/* Poster / thumbnail background */}
-																{selectedProject.screenshot_url && (
-																	<Image
-																		src={selectedProject.screenshot_url}
+																{selectedProject.screenshot_url && selectedProject.screenshot_url.split(',').map(s => s.trim()).filter(Boolean)[0] && (
+																	<img
+																		src={selectedProject.screenshot_url.split(',').map(s => s.trim()).filter(Boolean)[0]}
 																		alt='Video thumbnail'
-																		fill
-																		unoptimized
-																		className='object-cover opacity-40 group-hover:opacity-50 transition-opacity duration-500'
+																		className='absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-50 transition-opacity duration-500'
 																	/>
 																)}
 																<div className='absolute inset-0 bg-gradient-to-tr from-black/60 via-black/30 to-transparent' />
@@ -786,6 +804,34 @@ export default function Projects() {
 										</div>
 									</div>
 								</motion.div>
+							</motion.div>
+						)}
+
+						{/* Fullscreen Image Lightbox Modal */}
+						{expandedImage && (
+							<motion.div
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								exit={{ opacity: 0 }}
+								className='fixed inset-0 z-[300] flex items-center justify-center p-4 sm:p-8 bg-black/95 backdrop-blur-2xl'
+								onClick={() => setExpandedImage(null)}
+							>
+								<button
+									onClick={() => setExpandedImage(null)}
+									className='absolute top-6 right-6 sm:top-10 sm:right-10 w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-white/10 hover:bg-[var(--color-brand)] border border-white/20 flex items-center justify-center transition-all z-50 group shadow-[0_0_30px_rgba(0,0,0,0.5)]'
+								>
+									<X size={24} className='text-gray-300 group-hover:text-white group-hover:rotate-90 transition-all' />
+								</button>
+								<motion.img
+									initial={{ scale: 0.9, opacity: 0 }}
+									animate={{ scale: 1, opacity: 1 }}
+									exit={{ scale: 0.9, opacity: 0 }}
+									transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+									src={expandedImage}
+									alt='Expanded View'
+									className='max-w-full max-h-full object-contain rounded-2xl shadow-[0_0_100px_rgba(108,59,137,0.4)]'
+									onClick={(e) => e.stopPropagation()}
+								/>
 							</motion.div>
 						)}
 					</AnimatePresence>,
