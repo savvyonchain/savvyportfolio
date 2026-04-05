@@ -16,9 +16,9 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
 	return (
-		<html lang='en' className={`${spaceGrotesk.variable} overflow-x-hidden`}>
+		<html lang='en' className={`${spaceGrotesk.variable}`}>
 			<body
-				className={`${inter.className} antialiased relative min-h-screen selection:bg-brand selection:text-white overflow-x-hidden`}
+				className={`${inter.className} antialiased relative min-h-screen selection:bg-brand selection:text-white`}
 			>
 				{/* Global Animated Mesh Background */}
 				<div className='fixed inset-0 -z-50 overflow-hidden bg-[#0A0612] pointer-events-none'>
@@ -32,7 +32,7 @@ export default function RootLayout({ children }) {
 
 				<Navbar />
 
-				<main className='relative z-10 w-full min-w-0 overflow-x-hidden'>
+				<main className='relative z-10 w-full min-w-0' style={{ overflowX: 'clip' }}>
 					{children}
 				</main>
 
