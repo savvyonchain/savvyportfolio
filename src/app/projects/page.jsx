@@ -17,6 +17,7 @@ import {
 	Loader2,
 	RefreshCw,
 	Workflow,
+	CheckCircle2
 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 
@@ -607,20 +608,17 @@ export default function Projects() {
 													<label className='text-[10px] uppercase font-black tracking-widest text-[var(--color-brand-light)] mb-6 block opacity-60'>
 														03 / Key Milestones
 													</label>
-													<div className='grid grid-cols-1 gap-4'>
-														{selectedProject.outcomes?.map((outcome, i) => (
-															<div
-																key={i}
-																className='p-6 rounded-2xl bg-white/5 border border-white/5 flex items-center gap-5 hover:bg-white/[0.08] transition-all group'
-															>
-																<div className='w-10 h-10 rounded-xl bg-[var(--color-brand)]/10 text-[var(--color-brand-light)] flex items-center justify-center font-bold text-sm'>
-																	{i + 1}
-																</div>
-																<p className='text-white/90 font-medium'>
-																	{outcome}
-																</p>
-															</div>
-														))}
+													<div className='p-6 sm:p-8 bg-[#0a0a0b] border border-white/5 rounded-2xl shadow-xl'>
+														<ul className='space-y-5'>
+															{selectedProject.outcomes?.map((outcome, i) => (
+																<li key={i} className='flex items-center gap-4 group'>
+																	<CheckCircle2 strokeWidth={2.5} size={20} className='text-[#15b243] shrink-0 group-hover:scale-110 transition-transform' />
+																	<span className='text-[15px] font-semibold text-white tracking-wide opacity-90 group-hover:opacity-100 transition-opacity'>
+																		{outcome}
+																	</span>
+																</li>
+															))}
+														</ul>
 													</div>
 												</section>
 
