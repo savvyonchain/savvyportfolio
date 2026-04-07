@@ -12,6 +12,7 @@ import SkillsGrid from '@/components/SkillsGrid'
 import ProcessSection from '@/components/ProcessSection'
 import ExperienceSection from '@/components/ExperienceSection'
 import TestimonialsSection from '@/components/TestimonialsSection'
+import Projects from '@/app/projects/page'
 
 export default function Home() {
 	return (
@@ -206,6 +207,9 @@ export default function Home() {
 					</div>
 				</motion.div>
 			</section>
+
+			{/* 02.5. Portfolio Section */}
+			<Projects />
 
 			{/* 03. Tools Arsenal */}
 			<ToolsCarousel />
